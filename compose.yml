@@ -75,4 +75,4 @@ networks:
 secrets:
   postgres_password:
     external: true
-    name: ${STACK_NAME}_POSTGRES_PASSWORD_${SECRET_POSTGRES_PASSWORD_VERSION}
+    name: ${STACK_NAME}_postgres_password_${SECRET_POSTGRES_PASSWORD_VERSION}

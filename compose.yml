@@ -1,0 +1,75 @@
+---
+version: "3.8"
+
+services:
+  app:
+    image: "bonfirenetworks/bonfire:latest-${FLAVOUR}"
+    depends_on:
+      - db
+      - search
+    environment:
+      - POSTGRES_HOST=${STACK_NAME}_db
+      - SEARCH_MEILI_INSTANCE=http://${STACK_NAME}_search:7700
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=bonfire_db
+      - PUBLIC_PORT=443
+      - HOSTNAME
+    volumes:
+      - upload-data:/opt/app/data/uploads
+    networks:
+      - proxy
+      - internal
+    ports:
+      - "4000:4000" # make sure this is commented in production
+    deploy:
+      restart_policy:
+        condition: on-failure
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.services.${STACK_NAME}.loadbalancer.server.port=8000"
+        - "traefik.http.routers.${STACK_NAME}.rule=Host(`${HOSTNAME}`${EXTRA_DOMAINS})"
+        - "traefik.http.routers.${STACK_NAME}.entrypoints=web-secure"
+        - "traefik.http.routers.${STACK_NAME}.tls.certresolver=${LETS_ENCRYPT_ENV}"
+        ## Redirect from EXTRA_DOMAINS to HOSTNAME
+        #- "traefik.http.routers.${STACK_NAME}.middlewares=${STACK_NAME}-redirect"
+        #- "traefik.http.middlewares.${STACK_NAME}-redirect.headers.SSLForceHost=true"
+        #- "traefik.http.middlewares.${STACK_NAME}-redirect.headers.SSLHost=${HOSTNAME}"
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 10
+    #   start_period: 1m
+
+  db:
+    image: ${DB_DOCKER_IMAGE}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      # - POSTGRES_PASSWORD
+      - POSTGRES_PASSWORD_FILE=/run/secrets/POSTGRES_PASSWORD
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=bonfire_db
+    networks:
+      - internal
+
+  bonfire_search:
+    image: getmeili/meilisearch:latest
+    volumes:
+      - "search-data:/data.ms"
+    networks:
+      - internal
+
+volumes:
+  db-data:
+  upload-data:
+
+networks:
+  proxy:
+    external: true
+  internal:
+
+secrets:
+  POSTGRES_PASSWORD:
+    external: true
+    name: ${STACK_NAME}_POSTGRES_PASSWORD_${SECRET_POSTGRES_PASSWORD_VERSION}

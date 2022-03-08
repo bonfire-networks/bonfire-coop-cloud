@@ -47,13 +47,13 @@ services:
       - db-data:/var/lib/postgresql/data
     environment:
       # - POSTGRES_PASSWORD
-      - POSTGRES_PASSWORD_FILE=/run/secrets/POSTGRES_PASSWORD
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
       - POSTGRES_USER=postgres
       - POSTGRES_DB=bonfire_db
     networks:
       - internal
     secrets: 
-          - POSTGRES_PASSWORD
+          - postgres_password
        
   bonfire_search:
     image: getmeili/meilisearch:latest
@@ -73,6 +73,6 @@ networks:
   internal:
 
 secrets:
-  POSTGRES_PASSWORD:
+  postgres_password:
     external: true
     name: ${STACK_NAME}_POSTGRES_PASSWORD_${SECRET_POSTGRES_PASSWORD_VERSION}

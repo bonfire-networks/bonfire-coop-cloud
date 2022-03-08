@@ -27,13 +27,13 @@ services:
       labels:
         - "traefik.enable=true"
         - "traefik.http.services.${STACK_NAME}.loadbalancer.server.port=8000"
-        - "traefik.http.routers.${STACK_NAME}.rule=Host(`${HOSTNAME}`${EXTRA_DOMAINS})"
+        - "traefik.http.routers.${STACK_NAME}.rule=Host(`${DOMAIN}`${EXTRA_DOMAINS})"
         - "traefik.http.routers.${STACK_NAME}.entrypoints=web-secure"
         - "traefik.http.routers.${STACK_NAME}.tls.certresolver=${LETS_ENCRYPT_ENV}"
-        ## Redirect from EXTRA_DOMAINS to HOSTNAME
+        ## Redirect from EXTRA_DOMAINS to DOMAIN
         #- "traefik.http.routers.${STACK_NAME}.middlewares=${STACK_NAME}-redirect"
         #- "traefik.http.middlewares.${STACK_NAME}-redirect.headers.SSLForceHost=true"
-        #- "traefik.http.middlewares.${STACK_NAME}-redirect.headers.SSLHost=${HOSTNAME}"
+        #- "traefik.http.middlewares.${STACK_NAME}-redirect.headers.SSLHost=${DOMAIN}"
     # healthcheck:
     #   test: ["CMD", "curl", "-f", "http://localhost"]
     #   interval: 30s
@@ -52,7 +52,9 @@ services:
       - POSTGRES_DB=bonfire_db
     networks:
       - internal
-
+    secrets: 
+          - POSTGRES_PASSWORD
+       
   bonfire_search:
     image: getmeili/meilisearch:latest
     volumes:

@@ -79,7 +79,7 @@ services:
       - "search-data:/data.ms"
     networks:
       - internal
-    entrypoint: ["tini", "--", "/docker-entrypoint.sh"]
+    entrypoint: ["tini", "--", "bash", "/docker-entrypoint.sh"]
     configs:
       - source: app_entrypoint
         target: /docker-entrypoint.sh

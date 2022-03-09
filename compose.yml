@@ -14,7 +14,6 @@ services:
       - POSTGRES_DB=bonfire_db
       - PUBLIC_PORT=443
       - HOSTNAME
-      - MEILI_MASTER_KEY_FILE=/run/secrets/meili_master_key
     secrets: 
       - postgres_password
       - secret_key_base
@@ -30,7 +29,7 @@ services:
       - internal
     ports:
       - "4000:4000" # make sure this is commented in production
-    entrypoint: "/docker-entrypoint.sh"
+    entrypoint: ["/docker-entrypoint.sh", "./bin/bonfire", "start"]
     configs:
       - source: app_entrypoint
         target: /docker-entrypoint.sh
@@ -40,7 +39,7 @@ services:
         condition: on-failure
       labels:
         - "traefik.enable=true"
-        - "traefik.http.services.${STACK_NAME}.loadbalancer.server.port=8000"
+        - "traefik.http.services.${STACK_NAME}.loadbalancer.server.port=4000"
         - "traefik.http.routers.${STACK_NAME}.rule=Host(`${DOMAIN}`${EXTRA_DOMAINS})"
         - "traefik.http.routers.${STACK_NAME}.entrypoints=web-secure"
         - "traefik.http.routers.${STACK_NAME}.tls.certresolver=${LETS_ENCRYPT_ENV}"
@@ -71,15 +70,13 @@ services:
     
   search:
     image: getmeili/meilisearch:latest
-    environment:
-      - MEILI_MASTER_KEY_FILE=/run/secrets/meili_master_key
     secrets: 
       - meili_master_key
     volumes:
       - "search-data:/data.ms"
     networks:
       - internal
-    entrypoint: ["tini", "--", "bash", "/docker-entrypoint.sh"]
+    entrypoint: ["tini", "--", "/docker-entrypoint.sh", "./meilisearch"]
     configs:
       - source: app_entrypoint
         target: /docker-entrypoint.sh
@@ -104,22 +101,22 @@ configs:
 secrets:
   postgres_password:
     external: true
-    name: ${STACK_NAME}_postgres_password_${postgres_password_secret_version}
+    name: ${STACK_NAME}_postgres_password_${SECRET_POSTGRES_PASSWORD_VERSION}
   secret_key_base:
     external: true
-    name: ${STACK_NAME}_secret_key_base_${secret_key_base_secret_version}
+    name: ${STACK_NAME}_secret_key_base_${SECRET_SECRET_KEY_BASE_VERSION}
   signing_salt:
     external: true
-    name: ${STACK_NAME}_signing_salt_${signing_salt_secret_version}
+    name: ${STACK_NAME}_signing_salt_${SECRET_SIGNING_SALT_VERSION}
   encryption_salt:
     external: true
-    name: ${STACK_NAME}_encryption_salt_${encryption_salt_secret_version}
+    name: ${STACK_NAME}_encryption_salt_${SECRET_ENCRYPTION_SALT_VERSION}
   meili_master_key:
     external: true
-    name: ${STACK_NAME}_meili_master_key_${meili_master_key_secret_version}
+    name: ${STACK_NAME}_meili_master_key_${SECRET_MEILI_MASTER_KEY_VERSION}
   seeds_pw:
     external: true
-    name: ${STACK_NAME}_seeds_pw_${seeds_pw_secret_version}
+    name: ${STACK_NAME}_seeds_pw_${SECRET_SEEDS_PW_VERSION}
   livebook_password:
     external: true
-    name: ${STACK_NAME}_livebook_password_${livebook_password_secret_version}
+    name: ${STACK_NAME}_livebook_password_${SECRET_LIVEBOOK_PASSWORD_VERSION}

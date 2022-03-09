@@ -1,27 +1,15 @@
-#!/bin/bash
+#!/bin/sh
 
-set -e
+# put secrets from files into env
+export MEILI_MASTER_KEY=$(cat /run/secrets/meili_master_key)
+export POSTGRES_PASSWORD=$(cat /run/secrets/postgres_password)
+export SECRET_KEY_BASE=$(cat /run/secrets/secret_key_base)
+export SIGNING_SALT=$(cat /run/secrets/signing_salt)
+export ENCRYPTION_SALT=$(cat /run/secrets/encryption_salt)
+export SEEDS_PW=$(cat /run/secrets/seeds_pw)
+export LIVEBOOK_PASSWORD=$(cat /run/secrets/livebook_password)
 
-file_env() {
-   local var="$1"
-   local fileVar="${var}_FILE"
-   local def="${2:-}"
+echo "....Secrets have been loaded, now run $@...."
 
-   if [ "${!var:-}" ] && [ "${!fileVar:-}" ]; then
-      echo >&2 "error: both $var and $fileVar are set (but are exclusive)"
-      exit 1
-   fi
-
-   local val="$def"
-
-   if [ "${!var:-}" ]; then
-      val="${!var}"
-   elif [ "${!fileVar:-}" ]; then
-      val="$(< "${!fileVar}")"
-   fi
-
-   export "$var"="$val"
-   unset "$fileVar"
-}
-
-file_env "MEILI_MASTER_KEY"
+# This will exec the CMD from your Dockerfile
+exec "$@"

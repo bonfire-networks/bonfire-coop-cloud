@@ -1,0 +1,1 @@
+export APP_ENTRYPOINT_VERSION=v1

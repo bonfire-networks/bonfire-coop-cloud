@@ -13,7 +13,29 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_DB=bonfire_db
       - PUBLIC_PORT=443
+      - MIX_ENV=prod
       - HOSTNAME
+      - MAIL_BACKEND
+      - INVITE_ONLY
+      - INSTANCE_DESCRIPTION
+      - DISABLE_DB_AUTOMIGRATION
+      - UPLOAD_LIMIT
+      - INVITE_KEY
+      - MAIL_DOMAIN
+      - MAIL_KEY
+      - MAIL_FROM
+      - SENTRY_DSN
+      - WEB_PUSH_SUBJECT
+      - WEB_PUSH_PUBLIC_KEY
+      - WEB_PUSH_PRIVATE_KEY
+      - GEOLOCATE_OPENCAGEDATA
+      - GITHUB_TOKEN
+      - APP_NAME
+      - LANG
+      - SEEDS_USER
+      - ERLANG_COOKIE
+      - REPLACE_OS_VARS
+      - LIVEVIEW_ENABLED
     secrets: 
       - postgres_password
       - secret_key_base

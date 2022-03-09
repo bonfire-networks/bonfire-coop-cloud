@@ -69,7 +69,7 @@ services:
     networks:
       - internal
     
-  bonfire_search:
+  search:
     image: getmeili/meilisearch:latest
     environment:
       - MEILI_MASTER_KEY_FILE=/run/secrets/meili_master_key
@@ -79,7 +79,7 @@ services:
       - "search-data:/data.ms"
     networks:
       - internal
-    entrypoint: ["/tini", "--", "/docker-entrypoint.sh"]
+    entrypoint: ["tini", "--", "/docker-entrypoint.sh"]
     configs:
       - source: app_entrypoint
         target: /docker-entrypoint.sh

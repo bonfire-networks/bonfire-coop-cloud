@@ -30,6 +30,11 @@ services:
       - internal
     ports:
       - "4000:4000" # make sure this is commented in production
+    entrypoint: "/docker-entrypoint.sh"
+    configs:
+      - source: app_entrypoint
+        target: /docker-entrypoint.sh
+        mode: 0555
     deploy:
       restart_policy:
         condition: on-failure
@@ -74,6 +79,11 @@ services:
       - "search-data:/data.ms"
     networks:
       - internal
+    entrypoint: ["/tini", "--", "/docker-entrypoint.sh"]
+    configs:
+      - source: app_entrypoint
+        target: /docker-entrypoint.sh
+        mode: 0555
 
 volumes:
   db-data:
@@ -84,6 +94,12 @@ networks:
   proxy:
     external: true
   internal:
+
+configs:
+  app_entrypoint:
+    name: ${STACK_NAME}_app_entrypoint_${APP_ENTRYPOINT_VERSION}
+    file: entrypoint.sh.tmpl
+    template_driver: golang
 
 secrets:
   postgres_password:

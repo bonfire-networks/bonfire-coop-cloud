@@ -14,6 +14,15 @@ services:
       - POSTGRES_DB=bonfire_db
       - PUBLIC_PORT=443
       - HOSTNAME
+      - MEILI_MASTER_KEY_FILE=/run/secrets/meili_master_key
+    secrets: 
+      - postgres_password
+      - secret_key_base
+      - signing_salt
+      - encryption_salt
+      - meili_master_key
+      - seeds_pw
+      - livebook_password
     volumes:
       - upload-data:/opt/app/data/uploads
     networks:
@@ -43,20 +52,24 @@ services:
 
   db:
     image: ${DB_DOCKER_IMAGE}
-    volumes:
-      - db-data:/var/lib/postgresql/data
     environment:
       # - POSTGRES_PASSWORD
-      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
       - POSTGRES_USER=postgres
       - POSTGRES_DB=bonfire_db
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
+    secrets: 
+      - postgres_password
+    volumes:
+      - db-data:/var/lib/postgresql/data
     networks:
       - internal
-    secrets: 
-          - postgres_password
-       
+    
   bonfire_search:
     image: getmeili/meilisearch:latest
+    environment:
+      - MEILI_MASTER_KEY_FILE=/run/secrets/meili_master_key
+    secrets: 
+      - meili_master_key
     volumes:
       - "search-data:/data.ms"
     networks:
@@ -75,4 +88,22 @@ networks:
 secrets:
   postgres_password:
     external: true
-    name: ${STACK_NAME}_postgres_password_${SECRET_POSTGRES_PASSWORD_VERSION}
+    name: ${STACK_NAME}_postgres_password_${postgres_password_secret_version}
+  secret_key_base:
+    external: true
+    name: ${STACK_NAME}_secret_key_base_${secret_key_base_secret_version}
+  signing_salt:
+    external: true
+    name: ${STACK_NAME}_signing_salt_${signing_salt_secret_version}
+  encryption_salt:
+    external: true
+    name: ${STACK_NAME}_encryption_salt_${encryption_salt_secret_version}
+  meili_master_key:
+    external: true
+    name: ${STACK_NAME}_meili_master_key_${meili_master_key_secret_version}
+  seeds_pw:
+    external: true
+    name: ${STACK_NAME}_seeds_pw_${seeds_pw_secret_version}
+  livebook_password:
+    external: true
+    name: ${STACK_NAME}_livebook_password_${livebook_password_secret_version}

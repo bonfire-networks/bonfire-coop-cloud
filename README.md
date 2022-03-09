@@ -1,6 +1,6 @@
 # bonfire
 
-A coop-cloud recipe for deploying https://bonfirenetwork.org
+A [coop-cloud](https://coopcloud.tech) recipe for deploying [Bonfire](https://bonfirenetwork.org)
 
 <!-- metadata -->
 * **Category**: Apps

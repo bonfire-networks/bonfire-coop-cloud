@@ -49,8 +49,6 @@ services:
     networks:
       - proxy
       - internal
-    ports:
-      - "4000:4000" # make sure this is commented in production
     entrypoint: ["/docker-entrypoint.sh", "./bin/bonfire", "start"]
     configs:
       - source: app_entrypoint

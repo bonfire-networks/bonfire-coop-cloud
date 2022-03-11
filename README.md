@@ -23,6 +23,8 @@ A [coop-cloud](https://coopcloud.tech) recipe for deploying [Bonfire](https://bo
 6. `abra app deploy YOUR_APP_NAME`
 7. Open the configured domain in your browser and sign up! 
 
+## Upgrades 
+`abra app deploy --force YOUR_APP_NAME`
 
 [`abra`]: https://git.coopcloud.tech/coop-cloud/abra
 [`coop-cloud/traefik`]: https://git.coopcloud.tech/coop-cloud/traefik

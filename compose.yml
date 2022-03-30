@@ -3,7 +3,7 @@ version: "3.8"
 
 services:
   app:
-    image: bonfirenetworks/bonfire:latest-${FLAVOUR}
+    image: ${APP_DOCKER_IMAGE}
     depends_on:
       - db
       - search

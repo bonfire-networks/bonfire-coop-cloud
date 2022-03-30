@@ -1,6 +1,6 @@
 #/bin/sh
 
-abra app secret generate --all $1 
+# abra app secret generate --all $1 
 
 s1=$(openssl rand -base64 128)
 s2=$(openssl rand -base64 128)

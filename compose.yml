@@ -96,7 +96,7 @@ services:
       - "search-data:/data.ms"
     networks:
       - internal
-    entrypoint: ["tini", "--", "/docker-entrypoint.sh", "./meilisearch"]
+    entrypoint: ["tini", "--", "/docker-entrypoint.sh", "/bin/meilisearch"]
     configs:
       - source: app_entrypoint
         target: /docker-entrypoint.sh

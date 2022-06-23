@@ -36,6 +36,12 @@ services:
       - ERLANG_COOKIE
       - REPLACE_OS_VARS
       - LIVEVIEW_ENABLED
+      - UPLOADS_S3_BUCKET
+      - UPLOADS_S3_ACCESS_KEY_ID
+      - UPLOADS_S3_SECRET_ACCESS_KEY
+      - UPLOADS_S3_REGION
+      - UPLOADS_S3_HOST
+      - UPLOADS_S3_SCHEME
     secrets: 
       - postgres_password
       - secret_key_base

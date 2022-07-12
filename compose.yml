@@ -42,6 +42,7 @@ services:
       - UPLOADS_S3_REGION
       - UPLOADS_S3_HOST
       - UPLOADS_S3_SCHEME
+      - UPLOADS_S3_URL
     secrets: 
       - postgres_password
       - secret_key_base

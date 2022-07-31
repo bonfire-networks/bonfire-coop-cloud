@@ -22,8 +22,16 @@ services:
       - UPLOAD_LIMIT
       - INVITE_KEY
       - MAIL_DOMAIN
-      - MAIL_KEY
       - MAIL_FROM
+
+      # for Mailgun
+      - MAIL_KEY
+
+      # for SMTP
+      - MAIL_SERVER
+      - MAIL_USER
+      - MAIL_PASSWORD
+
       - SENTRY_DSN
       - WEB_PUSH_SUBJECT
       - WEB_PUSH_PUBLIC_KEY
@@ -43,7 +51,7 @@ services:
       - UPLOADS_S3_HOST
       - UPLOADS_S3_SCHEME
       - UPLOADS_S3_URL
-    secrets: 
+    secrets:
       - postgres_password
       - secret_key_base
       - signing_salt
@@ -88,16 +96,16 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_DB=bonfire_db
       - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
-    secrets: 
+    secrets:
       - postgres_password
     volumes:
       - db-data:/var/lib/postgresql/data
     networks:
       - internal
-    
+
   search:
     image: getmeili/meilisearch:latest
-    secrets: 
+    secrets:
       - meili_master_key
     volumes:
       - "search-data:/data.ms"

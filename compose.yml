@@ -22,8 +22,11 @@ services:
       - UPLOAD_LIMIT
       - INVITE_KEY
       - MAIL_DOMAIN
-      - MAIL_KEY
       - MAIL_FROM
+      - MAIL_KEY # for Mailgun
+      - MAIL_SERVER # for SMTP
+      - MAIL_USER # for SMTP
+      - MAIL_PASSWORD # for SMTP
       - SENTRY_DSN
       - WEB_PUSH_SUBJECT
       - WEB_PUSH_PUBLIC_KEY

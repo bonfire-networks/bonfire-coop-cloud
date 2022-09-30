@@ -14,13 +14,21 @@ services:
       - POSTGRES_DB=bonfire_db
       - PUBLIC_PORT=443
       - MIX_ENV=prod
+      
       - HOSTNAME
-      - MAIL_BACKEND
       - INVITE_ONLY
       - INSTANCE_DESCRIPTION
       - DISABLE_DB_AUTOMIGRATION
       - UPLOAD_LIMIT
       - INVITE_KEY
+      - LANG
+      - SEEDS_USER
+      - ERLANG_COOKIE
+      - REPLACE_OS_VARS
+      - LIVEVIEW_ENABLED
+      - APP_NAME
+      
+      - MAIL_BACKEND
       - MAIL_DOMAIN
       - MAIL_FROM
 
@@ -33,17 +41,16 @@ services:
       - MAIL_PASSWORD
 
       - SENTRY_DSN
+      
       - WEB_PUSH_SUBJECT
       - WEB_PUSH_PUBLIC_KEY
       - WEB_PUSH_PRIVATE_KEY
+      
+      - MAPBOX_API_KEY
       - GEOLOCATE_OPENCAGEDATA
+      
       - GITHUB_TOKEN
-      - APP_NAME
-      - LANG
-      - SEEDS_USER
-      - ERLANG_COOKIE
-      - REPLACE_OS_VARS
-      - LIVEVIEW_ENABLED
+      
       - UPLOADS_S3_BUCKET
       - UPLOADS_S3_ACCESS_KEY_ID
       - UPLOADS_S3_SECRET_ACCESS_KEY
@@ -51,6 +58,7 @@ services:
       - UPLOADS_S3_HOST
       - UPLOADS_S3_SCHEME
       - UPLOADS_S3_URL
+      
     secrets:
       - postgres_password
       - secret_key_base

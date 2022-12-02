@@ -34,6 +34,7 @@ services:
 
       # for Mailgun
       - MAIL_KEY
+      - MAIL_BASE_URI
 
       # for SMTP
       - MAIL_SERVER

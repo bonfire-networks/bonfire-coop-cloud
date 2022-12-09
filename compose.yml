@@ -27,6 +27,7 @@ services:
       - REPLACE_OS_VARS
       - LIVEVIEW_ENABLED
       - APP_NAME
+      - PLUG_SERVER
       
       - MAIL_BACKEND
       - MAIL_DOMAIN

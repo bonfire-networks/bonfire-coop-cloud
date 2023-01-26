@@ -112,6 +112,7 @@ services:
       - db-data:/var/lib/postgresql/data
     networks:
       - internal
+#     entrypoint: ['tail', '-f', '/dev/null']
 
   search:
     image: getmeili/meilisearch:latest

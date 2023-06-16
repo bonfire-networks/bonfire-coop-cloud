@@ -4,6 +4,8 @@ version: "3.8"
 services:
   app:
     image: ${APP_DOCKER_IMAGE}
+    # logging:
+    #   driver: none
     depends_on:
       - db
       - search
@@ -88,6 +90,8 @@ services:
         - "traefik.http.routers.${STACK_NAME}.rule=Host(`${DOMAIN}`${EXTRA_DOMAINS})"
         - "traefik.http.routers.${STACK_NAME}.entrypoints=web-secure"
         - "traefik.http.routers.${STACK_NAME}.tls.certresolver=${LETS_ENCRYPT_ENV}"
+        #- "traefik.http.routers.${STACK_NAME}.middlewares=error-pages-middleware"
+        #- "traefik.http.services.${STACK_NAME}.loadbalancer.server.port=80"
         ## Redirect from EXTRA_DOMAINS to DOMAIN
         #- "traefik.http.routers.${STACK_NAME}.middlewares=${STACK_NAME}-redirect"
         #- "traefik.http.middlewares.${STACK_NAME}-redirect.headers.SSLForceHost=true"
@@ -110,9 +114,16 @@ services:
       - postgres_password
     volumes:
       - db-data:/var/lib/postgresql/data
+      # - type: tmpfs
+      #   target: /dev/shm
+      #   tmpfs:
+      #      size: 1096000000 # (about 1GB)
     networks:
       - internal
-#     entrypoint: ['tail', '-f', '/dev/null']
+    # shm_size: ${DB_MEMORY_LIMIT}
+    # tmpfs:
+    #   - /tmp:size=${DB_MEMORY_LIMIT}
+    # entrypoint: ['tail', '-f', '/dev/null']
 
   search:
     image: getmeili/meilisearch:latest

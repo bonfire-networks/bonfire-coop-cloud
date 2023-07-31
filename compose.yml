@@ -123,7 +123,7 @@ services:
     # shm_size: ${DB_MEMORY_LIMIT}
     # tmpfs:
     #   - /tmp:size=${DB_MEMORY_LIMIT}
-    # entrypoint: ['tail', '-f', '/dev/null']
+    #entrypoint: ['tail', '-f', '/dev/null'] # uncomment when the Postgres DB is corrupted and won't start
 
   search:
     image: getmeili/meilisearch:latest

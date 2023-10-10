@@ -4,8 +4,11 @@ version: "3.8"
 services:
   app:
     image: ${APP_DOCKER_IMAGE}
-    # logging:
-    #   driver: none
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "10"
     depends_on:
       - db
       - search

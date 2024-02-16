@@ -11,10 +11,8 @@ services:
         max-file: "10"
     depends_on:
       - db
-      - search
     environment:
       - POSTGRES_HOST=${STACK_NAME}_db
-      - SEARCH_MEILI_INSTANCE=http://${STACK_NAME}_search:7700
       - POSTGRES_USER=postgres
       - POSTGRES_DB=bonfire_db
       - PUBLIC_PORT=443
@@ -34,6 +32,9 @@ services:
       - APP_NAME
       - PLUG_SERVER
       
+      - DB_SLOW_QUERY_MS
+      - DB_STATEMENT_TIMEOUT
+      
       - MAIL_BACKEND
       - MAIL_DOMAIN
       - MAIL_FROM
@@ -48,6 +49,10 @@ services:
       - MAIL_PASSWORD
 
       - SENTRY_DSN
+      - OTEL_ENABLED
+      - OTEL_SERVICE_NAME
+      - OTEL_HONEYCOMB_API_KEY
+      - OTEL_LIGHTSTEP_API_KEY
       
       - WEB_PUSH_SUBJECT
       - WEB_PUSH_PUBLIC_KEY
@@ -128,23 +133,9 @@ services:
     #   - /tmp:size=${DB_MEMORY_LIMIT}
     #entrypoint: ['tail', '-f', '/dev/null'] # uncomment when the Postgres DB is corrupted and won't start
 
-  search:
-    image: getmeili/meilisearch:latest
-    secrets:
-      - meili_master_key
-    volumes:
-      - "search-data:/data.ms"
-    networks:
-      - internal
-    entrypoint: ["tini", "--", "/docker-entrypoint.sh", "/bin/meilisearch"]
-    configs:
-      - source: app_entrypoint
-        target: /docker-entrypoint.sh
-        mode: 0555
 
 volumes:
   db-data:
-  search-data:
   upload-data:
 
 networks:

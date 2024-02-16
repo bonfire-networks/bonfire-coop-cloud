@@ -1,0 +1,27 @@
+---
+version: "3.8"
+
+services:
+  app:
+    depends_on:
+      - search
+    environment:
+      - SEARCH_MEILI_INSTANCE=http://${STACK_NAME}_search:7700
+      
+  search:
+    image: getmeili/meilisearch:latest
+    secrets:
+      - meili_master_key
+    volumes:
+      - "search-data:/data.ms"
+    networks:
+      - internal
+    entrypoint: ["tini", "--", "/docker-entrypoint.sh", "/bin/meilisearch"]
+    configs:
+      - source: app_entrypoint
+        target: /docker-entrypoint.sh
+        mode: 0555
+
+volumes:
+  search-data:
+

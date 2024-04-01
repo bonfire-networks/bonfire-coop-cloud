@@ -16,7 +16,7 @@ A [coop-cloud](https://coopcloud.tech) recipe for deploying [Bonfire](https://bo
 ## Basic usage
 
 1. Install [`abra`] on your computer
-2. Prepare your server with `abra server add --provision your-server.domain.name server_username 22`
+2. Prepare your server with `abra server add your-server.domain.name`
 3. Deploy the [`coop-cloud/traefik`] proxy if you haven't already
 3. `abra app new --secrets bonfire` 
 4. `abra app config your-server.domain.name` to check and edit the config (there are comments to explain the different options)

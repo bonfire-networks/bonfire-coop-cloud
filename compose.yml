@@ -71,6 +71,9 @@ services:
       - UPLOADS_S3_SCHEME
       - UPLOADS_S3_URL
       
+      - ORCID_CLIENT_ID
+      - ORCID_CLIENT_SECRET
+      
     secrets:
       - postgres_password
       - secret_key_base

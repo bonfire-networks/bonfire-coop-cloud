@@ -34,5 +34,8 @@ A [coop-cloud](https://coopcloud.tech) recipe for deploying [Bonfire](https://bo
 ### The app isn't starting
 On the server, try this command to see what services are starting or not: `docker service ls` and this one to debug why one isn't starting: `docker service ps $container_name`
 
+### How can I sign up via CLI?
+Go into your app's Elixir console and enter something like `Bonfire.Me.make_account_only("my@email.net", "my pw")`
+
 ### How can I get to the app's Elixir console?
 `abra app run your-server.domain.name app bin/bonfire remote`

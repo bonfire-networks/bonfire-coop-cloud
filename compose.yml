@@ -58,9 +58,9 @@ services:
       - WEB_PUSH_PUBLIC_KEY
       - WEB_PUSH_PRIVATE_KEY
       
+      - AKISMET_API_KEY
       - MAPBOX_API_KEY
       - GEOLOCATE_OPENCAGEDATA
-      
       - GITHUB_TOKEN
       
       - UPLOADS_S3_BUCKET

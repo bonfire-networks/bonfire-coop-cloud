@@ -71,6 +71,12 @@ services:
       - UPLOADS_S3_SCHEME
       - UPLOADS_S3_URL
       
+      - OPENID_1_DISPLAY_NAME
+      - OPENID_1_CLIENT_ID
+      - OPENID_1_CLIENT_SECRET
+      - OPENID_1_SCOPE
+      - OPENID_1_RESPONSE_TYPE
+
       - ORCID_CLIENT_ID
       - ORCID_CLIENT_SECRET
       

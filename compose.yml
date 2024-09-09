@@ -72,6 +72,7 @@ services:
       - UPLOADS_S3_URL
       
       - OPENID_1_DISPLAY_NAME
+      - OPENID_1_DISCOVERY
       - OPENID_1_CLIENT_ID
       - OPENID_1_CLIENT_SECRET
       - OPENID_1_SCOPE

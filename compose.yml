@@ -38,15 +38,21 @@ services:
       - MAIL_BACKEND
       - MAIL_DOMAIN
       - MAIL_FROM
-
-      # for Mailgun
       - MAIL_KEY
+      - MAIL_PROJECT_ID
+      - MAIL_PRIVATE_KEY
       - MAIL_BASE_URI
-
-      # for SMTP
+      - MAIL_REGION
+      - MAIL_SESSION_TOKEN
       - MAIL_SERVER
       - MAIL_USER
       - MAIL_PASSWORD
+      - MAIL_PORT
+      - MAIL_TLS
+      - MAIL_SSL
+      - MAIL_SMTP_AUTH
+      - MAIL_RETRIES
+      - MAIL_ARGS
 
       - SENTRY_DSN
       - OTEL_ENABLED
@@ -132,15 +138,23 @@ services:
       - postgres_password
     volumes:
       - db-data:/var/lib/postgresql/data
-      # - type: tmpfs
-      #   target: /dev/shm
-      #   tmpfs:
-      #      size: 1096000000 # (about 1GB)
+      - type: tmpfs
+        target: /dev/shm
+        tmpfs:
+           size: 1000000000
+           # about 1 GB in bytes ^
     networks:
       - internal
-    # shm_size: ${DB_MEMORY_LIMIT}
-    # tmpfs:
-    #   - /tmp:size=${DB_MEMORY_LIMIT}
+    # shm_size: ${DB_MEMORY_LIMIT} # unsupported by docker swarm
+    tmpfs:
+      - /tmp:size=${DB_MEMORY_LIMIT}M
+    command: >
+      postgres
+      -c max_connections=200
+      -c shared_buffers=${DB_MEMORY_LIMIT}MB
+    # -c shared_preload_libraries='pg_stat_statements'
+    # -c statement_timeout=1800000
+    # -c pg_stat_statements.track=all
     #entrypoint: ['tail', '-f', '/dev/null'] # uncomment when the Postgres DB is corrupted and won't start
 
 

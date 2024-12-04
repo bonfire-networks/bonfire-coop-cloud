@@ -31,6 +31,9 @@ services:
       - LIVEVIEW_ENABLED
       - APP_NAME
       - PLUG_SERVER
+      - WITH_LV_NATIVE
+      - WITH_IMAGE_VIX
+      - WITH_AI
       
       - DB_SLOW_QUERY_MS
       - DB_STATEMENT_TIMEOUT

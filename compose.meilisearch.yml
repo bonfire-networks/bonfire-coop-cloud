@@ -13,7 +13,7 @@ services:
     secrets:
       - meili_master_key
     volumes:
-      - "search-data:/data.ms"
+      - "search-data:/meili_data"
     networks:
       - internal
     entrypoint: ["tini", "--", "/docker-entrypoint.sh", "/bin/meilisearch"]

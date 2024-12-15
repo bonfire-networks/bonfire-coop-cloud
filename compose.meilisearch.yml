@@ -9,7 +9,7 @@ services:
       - SEARCH_MEILI_INSTANCE=http://${STACK_NAME}_search:7700
       
   search:
-    image: getmeili/meilisearch:latest
+    image: getmeili/meilisearch:v1
     secrets:
       - meili_master_key
     volumes:

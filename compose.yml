@@ -113,20 +113,19 @@ services:
       restart_policy:
         condition: on-failure
       labels:
-        backupbot.backup: ${ENABLE_BACKUPS:-true}
-        # backupbot.backup.volumes.upload-data: "true"
-        # backupbot.backup.volumes.upload-data.path: "/opt/app/data/uploads"
-        traefik.enable: "true"
-        traefik.http.services.${STACK_NAME}.loadbalancer.server.port: "4000"
-        traefik.http.routers.${STACK_NAME}.rule: Host(`${DOMAIN}`${EXTRA_DOMAINS})
-        traefik.http.routers.${STACK_NAME}.entrypoints: web-secure
-        traefik.http.routers.${STACK_NAME}.tls.certresolver: ${LETS_ENCRYPT_ENV}
-        #traefik.http.routers.${STACK_NAME}.middlewares: error-pages-middleware
-        #traefik.http.services.${STACK_NAME}.loadbalancer.server.port: 80
-        ## Redirect from EXTRA_DOMAINS to DOMAIN
-        #traefik.http.routers.${STACK_NAME}.middlewares: ${STACK_NAME}-redirect
-        #traefik.http.middlewares.${STACK_NAME}-redirect.headers.SSLForceHost: true
-        #traefik.http.middlewares.${STACK_NAME}-redirect.headers.SSLHost: ${DOMAIN}
+        - "backupbot.backup=${ENABLE_BACKUPS:-true}"
+        #- backupbot.backup.volumes.upload-data: "true"
+        #- backupbot.backup.volumes.upload-data.path: "/opt/app/data/uploads"
+        - "traefik.enable=true"
+        - "traefik.http.services.${STACK_NAME}.loadbalancer.server.port=4000"
+        - "traefik.http.routers.${STACK_NAME}.rule=Host(`${DOMAIN}`${EXTRA_DOMAINS})"
+        - "traefik.http.routers.${STACK_NAME}.entrypoints=web-secure"
+        - "traefik.http.routers.${STACK_NAME}.tls.certresolver=${LETS_ENCRYPT_ENV}"
+        #- "traefik.http.routers.${STACK_NAME}.middlewares=error-pages-middleware"
+        #- "traefik.http.services.${STACK_NAME}.loadbalancer.server.port=80"
+        #- "traefik.http.routers.${STACK_NAME}.middlewares=${STACK_NAME}-redirect"
+        #- "traefik.http.middlewares.${STACK_NAME}-redirect.headers.SSLForceHost=true"
+        #- "traefik.http.middlewares.${STACK_NAME}-redirect.headers.SSLHost=${DOMAIN}"
     # healthcheck:
     #   test: ["CMD", "curl", "-f", "http://localhost"]
     #   interval: 30s

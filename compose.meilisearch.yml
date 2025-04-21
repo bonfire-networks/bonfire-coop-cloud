@@ -9,7 +9,7 @@ services:
       - SEARCH_MEILI_INSTANCE=http://${STACK_NAME}_search:7700
       
   search:
-    image: getmeili/meilisearch:v1.11 # WIP: upgrade from v1.11 to 1.14
+    image: getmeili/meilisearch:v1.14 # WIP: upgrade from v1.11 to 1.14
     secrets:
       - meili_master_key
     volumes:

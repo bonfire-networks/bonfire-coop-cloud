@@ -24,7 +24,7 @@ function backup {
 function restore {
     echo "Restoring database from ${LATEST_BACKUP_FILE}..."
 
-    cd /var/lib/postgresql/data/
+    cd ${BACKUP_PATH}
     
     function restore_config {
         echo "Restoring original pg_hba.conf configuration..."

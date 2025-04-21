@@ -1,5 +1,7 @@
 #/bin/sh
 
+# NOTE: this script should no longer be needed now that we have `# length=128` next to these secrets in the .env
+
 # abra app secret generate --all $1 
 
 s1=$(openssl rand -base64 128)

@@ -9,19 +9,36 @@ services:
       - SEARCH_MEILI_INSTANCE=http://${STACK_NAME}_search:7700
       
   search:
-    image: getmeili/meilisearch:v1
+    image: getmeili/meilisearch:v1.11 # TODO: upgrade to 1.14
     secrets:
       - meili_master_key
     volumes:
       - "search-data:/meili_data"
+      - "dump-data:/meili_dumps"
     networks:
       - internal
     entrypoint: ["tini", "--", "/docker-entrypoint.sh", "/bin/meilisearch"]
+    environment:
+      - MEILI_DUMP_DIR=/meili_dumps
     configs:
       - source: app_entrypoint
         target: /docker-entrypoint.sh
         mode: 0555
-
+      - source: meili_backup
+        target: /meili_backup.sh
+        mode: 0555
+    labels:
+        backupbot.backup: ${ENABLE_BACKUPS:-true}
+        backupbot.backup.volumes.search-data: "false"
+        backupbot.backup.volumes.dump-data.path: "/meili_dumps/meilisearch_latest.dump"
+        backupbot.backup.pre-hook: "/meili_backup.sh backup"
+        backupbot.restore.post-hook: '/meili_backup.sh restore'
+        
 volumes:
   search-data:
-
+  dump-data:
+   
+configs:
+  meili_backup:
+    name: ${STACK_NAME}_meili_backup_${MEILI_BACKUP_VERSION}
+    file: meili_backup.sh

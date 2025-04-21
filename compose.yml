@@ -112,17 +112,20 @@ services:
       restart_policy:
         condition: on-failure
       labels:
-        - "traefik.enable=true"
-        - "traefik.http.services.${STACK_NAME}.loadbalancer.server.port=4000"
-        - "traefik.http.routers.${STACK_NAME}.rule=Host(`${DOMAIN}`${EXTRA_DOMAINS})"
-        - "traefik.http.routers.${STACK_NAME}.entrypoints=web-secure"
-        - "traefik.http.routers.${STACK_NAME}.tls.certresolver=${LETS_ENCRYPT_ENV}"
-        #- "traefik.http.routers.${STACK_NAME}.middlewares=error-pages-middleware"
-        #- "traefik.http.services.${STACK_NAME}.loadbalancer.server.port=80"
+        backupbot.backup: ${ENABLE_BACKUPS:-true}
+        backupbot.backup.volumes.upload-data: "true"
+        # backupbot.backup.volumes.upload-data.path: "/opt/app/data/uploads"
+        traefik.enable: "true"
+        traefik.http.services.${STACK_NAME}.loadbalancer.server.port: "4000"
+        traefik.http.routers.${STACK_NAME}.rule: Host(`${DOMAIN}`${EXTRA_DOMAINS})
+        traefik.http.routers.${STACK_NAME}.entrypoints: web-secure
+        traefik.http.routers.${STACK_NAME}.tls.certresolver: ${LETS_ENCRYPT_ENV}
+        #traefik.http.routers.${STACK_NAME}.middlewares: error-pages-middleware
+        #traefik.http.services.${STACK_NAME}.loadbalancer.server.port: 80
         ## Redirect from EXTRA_DOMAINS to DOMAIN
-        #- "traefik.http.routers.${STACK_NAME}.middlewares=${STACK_NAME}-redirect"
-        #- "traefik.http.middlewares.${STACK_NAME}-redirect.headers.SSLForceHost=true"
-        #- "traefik.http.middlewares.${STACK_NAME}-redirect.headers.SSLHost=${DOMAIN}"
+        #traefik.http.routers.${STACK_NAME}.middlewares: ${STACK_NAME}-redirect
+        #traefik.http.middlewares.${STACK_NAME}-redirect.headers.SSLForceHost: true
+        #traefik.http.middlewares.${STACK_NAME}-redirect.headers.SSLHost: ${DOMAIN}
     # healthcheck:
     #   test: ["CMD", "curl", "-f", "http://localhost"]
     #   interval: 30s
@@ -159,7 +162,16 @@ services:
     # -c statement_timeout=1800000
     # -c pg_stat_statements.track=all
     #entrypoint: ['tail', '-f', '/dev/null'] # uncomment when the Postgres DB is corrupted and won't start
-
+    labels:
+        backupbot.backup: ${ENABLE_BACKUPS:-true}
+        # backupbot.backup.volumes.db-data: false
+        backupbot.backup.volumes.db-data.path: "backup.sql"
+        backupbot.backup.pre-hook: "/pg_backup.sh backup"
+        backupbot.restore.post-hook: '/pg_backup.sh restore'
+    configs:
+        - source: pg_backup
+          target: /pg_backup.sh
+          mode: 0555
 
 volumes:
   db-data:
@@ -175,6 +187,9 @@ configs:
     name: ${STACK_NAME}_app_entrypoint_${APP_ENTRYPOINT_VERSION}
     file: entrypoint.sh.tmpl
     template_driver: golang
+  pg_backup:
+    name: ${STACK_NAME}_pg_backup_${PG_BACKUP_VERSION}
+    file: pg_backup.sh
 
 secrets:
   postgres_password:

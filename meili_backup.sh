@@ -31,7 +31,7 @@ function backup {
   fi && \
   DUMP_UID=$(curl -s "http://localhost:7700/tasks/$TASK_UID" -H "Authorization: Bearer $SECRET" | grep -o '\"dumpUid\":\"[^\"]*\"' | cut -d':' -f2 | tr -d '\"') && \
   echo "Using dump $DUMP_UID" && \
-  cp "/meili_dumps/$DUMP_UID.dump" "/meili_dumps/meilisearch_latest.dump" && \
+  cp -f "/meili_dumps/$DUMP_UID.dump" "/meili_dumps/meilisearch_latest.dump" && \
   echo "Dump created and copied successfully"
 }
 

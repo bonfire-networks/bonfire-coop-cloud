@@ -19,7 +19,6 @@ services:
       - MIX_ENV=prod
       
       - HOSTNAME
-      - INVITE_ONLY
       - INSTANCE_DESCRIPTION
       - DISABLE_DB_AUTOMIGRATION
       - UPLOAD_LIMIT

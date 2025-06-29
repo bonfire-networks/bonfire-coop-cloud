@@ -78,6 +78,7 @@ services:
       - UPLOADS_S3_HOST
       - UPLOADS_S3_SCHEME
       - UPLOADS_S3_URL
+      - UPLOADS_S3_DEFAULT_URL
       
       - ENABLE_SSO_PROVIDER
       

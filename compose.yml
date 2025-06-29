@@ -79,6 +79,8 @@ services:
       - UPLOADS_S3_SCHEME
       - UPLOADS_S3_URL
       
+      - ENABLE_SSO_PROVIDER
+      
       - OPENID_1_DISPLAY_NAME
       - OPENID_1_DISCOVERY
       - OPENID_1_CLIENT_ID

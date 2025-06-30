@@ -79,6 +79,9 @@ services:
       - UPLOADS_S3_SCHEME
       - UPLOADS_S3_URL
       - UPLOADS_S3_DEFAULT_URL
+      - UPLOADS_S3_URL_EXPIRATION_TTL
+      - AWS_ROLE_ARN
+      - AWS_WEB_IDENTITY_TOKEN_FILE
       
       - ENABLE_SSO_PROVIDER
       

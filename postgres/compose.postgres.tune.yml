@@ -1,0 +1,51 @@
+---
+version: "3.8"
+
+services:
+  
+  db:
+    environment:
+      - AVAILABLE_RAM_MB=${DB_MEMORY_LIMIT}
+      - PG_DB_TYPE
+      - PG_STORAGE_TYPE
+      # - POSTGRES_START_CMD=
+      #   - postgres
+      #     -c max_connections=200
+      #     -c shared_buffers=${DB_MEMORY_LIMIT}MB
+      #     # -c shared_preload_libraries='pg_stat_statements'
+      #     # -c statement_timeout=1800000
+      #     # -c pg_stat_statements.track=all
+    # shm_size: ${DB_MEMORY_LIMIT} # unsupported by docker swarm
+    tmpfs:
+      - /tmp:size=${DB_MEMORY_LIMIT}M
+    entrypoint: ["/postgres-entrypoint.sh"]
+    #entrypoint: ['tail', '-f', '/dev/null'] # can replace entrypoint when the Postgres DB is corrupted and won't start
+    configs:
+        - source: postgres_entrypoint
+          target: /postgres-entrypoint.sh
+          mode: 0555
+        - source: postgres_tune
+          target: /postgres-tune.sh
+          mode: 0555
+        - source: postgres_conf_tmpl
+          target: /postgres.conf.tmpl
+          mode: 0444
+        - source: bash_envsubst
+          target: /bash-envsubst.sh
+          mode: 0444
+
+
+configs:
+  postgres_entrypoint:
+    name: ${STACK_NAME}_postgres_entrypoint_${POSTGRES_ENTRYPOINT_VERSION:-v6}
+    file: postgres/postgres-entrypoint.sh
+  postgres_tune:
+    name: ${STACK_NAME}_postgres_tune_${POSTGRES_TUNE_VERSION:-v1}
+    file: postgres/postgres-tune.sh
+  postgres_conf_tmpl:
+    name: ${STACK_NAME}_postgres_conf_tmpl_${POSTGRES_CONF_TMPL_VERSION:-v2}
+    file: postgres/postgres.conf.tmpl
+  bash_envsubst:
+    name: ${STACK_NAME}_bash_envsubst_${BASH_ENVSUBST_VERSION:-v1}
+    file: postgres/bash-envsubst.sh
+

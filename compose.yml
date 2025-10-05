@@ -84,6 +84,7 @@ services:
       - AWS_WEB_IDENTITY_TOKEN_FILE
       
       - ENABLE_SSO_PROVIDER
+      - OAUTH_ISSUER
       
       - OPENID_1_DISPLAY_NAME
       - OPENID_1_DISCOVERY

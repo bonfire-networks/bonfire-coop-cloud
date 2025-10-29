@@ -36,7 +36,8 @@ services:
       
       - DB_SLOW_QUERY_MS
       - DB_STATEMENT_TIMEOUT
-      
+      - DB_MIGRATE_INDEXES_CONCURRENTLY
+
       - MAIL_BACKEND
       - MAIL_DOMAIN
       - MAIL_FROM

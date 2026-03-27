@@ -9,6 +9,11 @@ export ENCRYPTION_SALT=$(cat /run/secrets/encryption_salt)
 export SEEDS_PW=$(cat /run/secrets/seeds_pw)
 export LIVEBOOK_PASSWORD=$(cat /run/secrets/livebook_password)
 
+# Only read the secret when the MAIL_PASSWORD was not set to remain backwards compatible
+if [[ -z ${MAIL_PASSWORD} ]]; then
+    export MAIL_PASSWORD=$(cat /run/secrets/mail_password)
+fi
+
 echo "....Secrets have been loaded, now run $@...."
 
 # This will exec the CMD from your Dockerfile

@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  app:
+    secrets:
+      - mail_password
+
+secrets:
+  mail_password:
+    external: true
+    name: ${STACK_NAME}_mail_password_${SECRET_MAIL_PASSWORD_VERSION}

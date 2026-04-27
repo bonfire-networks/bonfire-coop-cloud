@@ -10,8 +10,13 @@ export SEEDS_PW=$(cat /run/secrets/seeds_pw)
 export LIVEBOOK_PASSWORD=$(cat /run/secrets/livebook_password)
 
 # Only read the secret when the MAIL_PASSWORD was not set to remain backwards compatible
-if [[ -z ${MAIL_PASSWORD} ]]; then
+if [ -f /run/secrets/mail_password ] && [ -z "${MAIL_PASSWORD}" ]; then
     export MAIL_PASSWORD=$(cat /run/secrets/mail_password)
+fi
+
+# Only read the secret when the MAIL_KEY was not set to remain backwards compatible
+if [ -f /run/secrets/mail_key ] && [ -z "${MAIL_KEY}" ]; then
+    export MAIL_KEY=$(cat /run/secrets/mail_key)
 fi
 
 echo "....Secrets have been loaded, now run $@...."

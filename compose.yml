@@ -46,7 +46,6 @@ services:
       - MAIL_PRIVATE_KEY
       - MAIL_BASE_URI
       - MAIL_REGION
-      - MAIL_SESSION_TOKEN
       - MAIL_SERVER
       - MAIL_USER
       - MAIL_PASSWORD

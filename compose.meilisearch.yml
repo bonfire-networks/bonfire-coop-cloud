@@ -40,5 +40,5 @@ volumes:
    
 configs:
   meili_backup:
-    name: ${STACK_NAME}_meili_backup_${MEILI_BACKUP_VERSION}
+    name: ${STACK_NAME}_meili_backup_${MEILI_BACKUP_VERSION:-v4}
     file: meili_backup.sh

@@ -35,13 +35,13 @@ volumes:
    
 configs:
   sonic_cfg:
-    name: ${STACK_NAME}_sonic_cfg_${SONIC_CFG_VERSION}
+    name: ${STACK_NAME}_sonic_cfg_${SONIC_CFG_VERSION:-v1}
     file: sonic.cfg
   sonic_entrypoint:
-    name: ${STACK_NAME}_sonic_entrypoint_${SONIC_ENTRYPOINT_VERSION}
+    name: ${STACK_NAME}_sonic_entrypoint_${SONIC_ENTRYPOINT_VERSION:-v1}
     file: sonic_entrypoint.sh
 
 secrets:
   sonic_password:
     external: true
-    name: ${STACK_NAME}_sonic_password_${SECRET_SONIC_PASSWORD_VERSION}
+    name: ${STACK_NAME}_sonic_password_${SECRET_SONIC_PASSWORD_VERSION:-v1}

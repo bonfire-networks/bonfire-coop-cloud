@@ -203,32 +203,32 @@ networks:
 
 configs:
   app_entrypoint:
-    name: ${STACK_NAME}_app_entrypoint_${APP_ENTRYPOINT_VERSION}
+    name: ${STACK_NAME}_app_entrypoint_${APP_ENTRYPOINT_VERSION:-v3}
     file: entrypoint.sh.tmpl
     template_driver: golang
   pg_backup:
-    name: ${STACK_NAME}_pg_backup_${PG_BACKUP_VERSION}
+    name: ${STACK_NAME}_pg_backup_${PG_BACKUP_VERSION:-v4}
     file: pg_backup.sh
 
 secrets:
   postgres_password:
     external: true
-    name: ${STACK_NAME}_postgres_password_${SECRET_POSTGRES_PASSWORD_VERSION}
+    name: ${STACK_NAME}_postgres_password_${SECRET_POSTGRES_PASSWORD_VERSION:-v1}
   secret_key_base:
     external: true
-    name: ${STACK_NAME}_secret_key_base_${SECRET_SECRET_KEY_BASE_VERSION}
+    name: ${STACK_NAME}_secret_key_base_${SECRET_SECRET_KEY_BASE_VERSION:-v1}
   signing_salt:
     external: true
-    name: ${STACK_NAME}_signing_salt_${SECRET_SIGNING_SALT_VERSION}
+    name: ${STACK_NAME}_signing_salt_${SECRET_SIGNING_SALT_VERSION:-v1}
   encryption_salt:
     external: true
-    name: ${STACK_NAME}_encryption_salt_${SECRET_ENCRYPTION_SALT_VERSION}
+    name: ${STACK_NAME}_encryption_salt_${SECRET_ENCRYPTION_SALT_VERSION:-v1}
   meili_master_key:
     external: true
-    name: ${STACK_NAME}_meili_master_key_${SECRET_MEILI_MASTER_KEY_VERSION}
+    name: ${STACK_NAME}_meili_master_key_${SECRET_MEILI_MASTER_KEY_VERSION:-v1}
   seeds_pw:
     external: true
-    name: ${STACK_NAME}_seeds_pw_${SECRET_SEEDS_PW_VERSION}
+    name: ${STACK_NAME}_seeds_pw_${SECRET_SEEDS_PW_VERSION:-v1}
   livebook_password:
     external: true
-    name: ${STACK_NAME}_livebook_password_${SECRET_LIVEBOOK_PASSWORD_VERSION}
+    name: ${STACK_NAME}_livebook_password_${SECRET_LIVEBOOK_PASSWORD_VERSION:-v1}

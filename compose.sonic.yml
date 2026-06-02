@@ -1,0 +1,47 @@
+---
+version: "3.8"
+
+services:
+  app:
+    depends_on:
+      - search
+    environment:
+      - SEARCH_ADAPTER=sonic
+      - SONIC_HOST=${STACK_NAME}_search
+      - SONIC_PORT=1491
+      - SONIC_PASSWORD_FILE=/run/secrets/sonic_password
+    secrets:
+      - sonic_password
+      
+  search:
+    image: valeriansaliou/sonic:v1.4.9
+    secrets:
+      - sonic_password
+    volumes:
+      - "sonic-data:/var/lib/sonic/store"
+    networks:
+      - internal
+    entrypoint: ["/docker-entrypoint.sh"]
+    configs:
+      - source: sonic_cfg
+        target: /etc/sonic.cfg
+        mode: 0444
+      - source: sonic_entrypoint
+        target: /docker-entrypoint.sh
+        mode: 0555
+        
+volumes:
+  sonic-data:
+   
+configs:
+  sonic_cfg:
+    name: ${STACK_NAME}_sonic_cfg_${SONIC_CFG_VERSION}
+    file: sonic.cfg
+  sonic_entrypoint:
+    name: ${STACK_NAME}_sonic_entrypoint_${SONIC_ENTRYPOINT_VERSION}
+    file: sonic_entrypoint.sh
+
+secrets:
+  sonic_password:
+    external: true
+    name: ${STACK_NAME}_sonic_password_${SECRET_SONIC_PASSWORD_VERSION}

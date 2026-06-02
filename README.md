@@ -27,9 +27,8 @@ A [coop-cloud](https://coopcloud.tech) recipe for deploying [Bonfire](https://bo
 
 NOTE: we recommend switching to the new `sonic` search backend (instead of the deprecated `meilisearch`):
 1. comment the `COMPOSE_FILE` line that contains `compose.meilisearch.yml` in the `.env` file for your bonfire instancem and replace with a line like `COMPOSE_FILE="compose.yml:compose.sonic.yml"`
-2. add `SECRET_SONIC_PASSWORD_VERSION=v1` to the same file
-3. run `abra app secret generate your-server.domain.name sonic_password v1` to generate a password for it
-4. redeploy with `abra app deploy --force your-server.domain.name`
+2. add `SONIC_PASSWORD=a-super-secret-password` to the same file (make sure to change the password after pasting!)
+3. redeploy with `abra app deploy --force your-server.domain.name`
 
 
 [`abra`]: https://docs.coopcloud.tech/abra/

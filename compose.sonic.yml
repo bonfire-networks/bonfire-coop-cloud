@@ -9,26 +9,28 @@ services:
       - SEARCH_ADAPTER=sonic
       - SONIC_HOST=${STACK_NAME}_search
       - SONIC_PORT=1491
-      - SONIC_PASSWORD_FILE=/run/secrets/sonic_password
-    secrets:
-      - sonic_password
+      - SONIC_PASSWORD
+      # - SONIC_PASSWORD_FILE=/run/secrets/sonic_password
+    # secrets:
+    #   - sonic_password
       
   search:
     image: valeriansaliou/sonic:v1.5.1
-    secrets:
-      - sonic_password
+    # secrets:
+    #   - sonic_password
     volumes:
       - "sonic-data:/var/lib/sonic/store"
     networks:
       - internal
-    entrypoint: ["/docker-entrypoint.sh"]
+    # NOTE: latest versions of Sonic (v1.5.1+) don't have a shell, so we can't have a custom entrypoint script that does pre-startup configuration, so we just need to store the PW in env for now
+    # entrypoint: ["/docker-entrypoint.sh"]
     configs:
       - source: sonic_cfg
         target: /etc/sonic.cfg
         mode: 0444
-      - source: sonic_entrypoint
-        target: /docker-entrypoint.sh
-        mode: 0555
+      # - source: sonic_entrypoint
+      #   target: /docker-entrypoint.sh
+      #   mode: 0555
         
 volumes:
   sonic-data:
@@ -37,11 +39,11 @@ configs:
   sonic_cfg:
     name: ${STACK_NAME}_sonic_cfg_${SONIC_CFG_VERSION:-v1}
     file: sonic.cfg
-  sonic_entrypoint:
-    name: ${STACK_NAME}_sonic_entrypoint_${SONIC_ENTRYPOINT_VERSION:-v1}
-    file: sonic_entrypoint.sh
+  # sonic_entrypoint:
+  #   name: ${STACK_NAME}_sonic_entrypoint_${SONIC_ENTRYPOINT_VERSION:-v1}
+  #   file: sonic_entrypoint.sh
 
-secrets:
-  sonic_password:
-    external: true
-    name: ${STACK_NAME}_sonic_password_${SECRET_SONIC_PASSWORD_VERSION:-v1}
+# secrets:
+#   sonic_password:
+#     external: true
+#     name: ${STACK_NAME}_sonic_password_${SECRET_SONIC_PASSWORD_VERSION:-v1}

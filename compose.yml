@@ -181,7 +181,8 @@ services:
     # -c statement_timeout=1800000
     # -c pg_stat_statements.track=all
     #entrypoint: ['tail', '-f', '/dev/null'] # uncomment when the Postgres DB is corrupted and won't start
-    labels:
+    deploy:
+      labels:
         backupbot.backup: ${ENABLE_BACKUPS:-true}
         # backupbot.backup.volumes.db-data: false
         backupbot.backup.volumes.db-data.path: "backup.sql"

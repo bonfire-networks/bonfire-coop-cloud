@@ -33,6 +33,7 @@ services:
       - WITH_LV_NATIVE
       - WITH_IMAGE_VIX
       - WITH_AI
+      - LIVE_DASHBOARD_LOGGER
       
       - DB_SLOW_QUERY_MS
       - DB_STATEMENT_TIMEOUT

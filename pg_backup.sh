@@ -6,18 +6,17 @@ BACKUP_PATH="/var/lib/postgresql/data"
 LATEST_BACKUP_FILE="${BACKUP_PATH}/backup.sql"
 
 function backup {
-  FILE_WITH_DATE="${BACKUP_PATH}/backup_$(date +%F).sql"
-  
   if [ -f "$POSTGRES_PASSWORD_FILE" ]; then
     export PGPASSWORD=$(cat "$POSTGRES_PASSWORD_FILE")
   fi
-  
-  echo "Creating backup at ${FILE_WITH_DATE}..."
-  pg_dump -U "${POSTGRES_USER:-postgres}" "${POSTGRES_DB:-postgres}" > "${FILE_WITH_DATE}"
-  
-  echo "Copying to ${LATEST_BACKUP_FILE}..."
-  cp -f "${FILE_WITH_DATE}" "${LATEST_BACKUP_FILE}"
-  
+
+  # Keep a single backup.sql (restic handles versioning); write to a temp file and move
+  # atomically so a failed dump never clobbers the last good backup.
+  echo "Creating backup at ${LATEST_BACKUP_FILE}..."
+  rm -f "${LATEST_BACKUP_FILE}.tmp"
+  pg_dump -U "${POSTGRES_USER:-postgres}" "${POSTGRES_DB:-postgres}" > "${LATEST_BACKUP_FILE}.tmp"
+  mv -f "${LATEST_BACKUP_FILE}.tmp" "${LATEST_BACKUP_FILE}"
+
   echo "Backup done. You will find it at ${LATEST_BACKUP_FILE}"
 }
 

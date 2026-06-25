@@ -108,6 +108,11 @@ services:
 
       - ORCID_CLIENT_ID
       - ORCID_CLIENT_SECRET
+
+      - GHOST_URL
+      - GHOST_CONTENT_API_KEY
+      - GHOST_ADMIN_API_KEY
+      - IFRAME_ALLOWED_ORIGINS
       
     secrets:
       - postgres_password

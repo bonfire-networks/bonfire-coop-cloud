@@ -12,9 +12,6 @@ services:
     depends_on:
       - db
     environment:
-      - POSTGRES_HOST=${STACK_NAME}_db
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=bonfire_db
       - PUBLIC_PORT=443
       - MIX_ENV=prod
       
@@ -115,7 +112,6 @@ services:
       - IFRAME_ALLOWED_ORIGINS
       
     secrets:
-      - postgres_password
       - secret_key_base
       - signing_salt
       - encryption_salt
@@ -157,47 +153,6 @@ services:
     #   retries: 10
     #   start_period: 1m
 
-  db:
-    image: ${DB_DOCKER_IMAGE}
-    environment:
-      # - POSTGRES_PASSWORD
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=bonfire_db
-      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
-    secrets:
-      - postgres_password
-    volumes:
-      - db-data:/var/lib/postgresql/data
-      - type: tmpfs
-        target: /dev/shm
-        tmpfs:
-           size: 1000000000
-           # about 1 GB in bytes ^
-    networks:
-      - internal
-    # shm_size: ${DB_MEMORY_LIMIT} # unsupported by docker swarm
-    tmpfs:
-      - /tmp:size=${DB_MEMORY_LIMIT}M
-    command: >
-      postgres
-      -c max_connections=200
-      -c shared_buffers=${DB_MEMORY_LIMIT}MB
-    # -c shared_preload_libraries='pg_stat_statements'
-    # -c statement_timeout=1800000
-    # -c pg_stat_statements.track=all
-    #entrypoint: ['tail', '-f', '/dev/null'] # uncomment when the Postgres DB is corrupted and won't start
-    deploy:
-      labels:
-        backupbot.backup: ${ENABLE_BACKUPS:-true}
-        # backupbot.backup.volumes.db-data: false
-        backupbot.backup.volumes.db-data.path: "backup.sql"
-        backupbot.backup.pre-hook: "/pg_backup.sh backup"
-        backupbot.restore.post-hook: '/pg_backup.sh restore'
-    configs:
-        - source: pg_backup
-          target: /pg_backup.sh
-          mode: 0555
-
 volumes:
   db-data:
   upload-data:
@@ -213,14 +168,8 @@ configs:
     name: ${STACK_NAME}_app_entrypoint_${APP_ENTRYPOINT_VERSION:-v3}
     file: entrypoint.sh.tmpl
     template_driver: golang
-  pg_backup:
-    name: ${STACK_NAME}_pg_backup_${PG_BACKUP_VERSION:-v4}
-    file: pg_backup.sh
 
 secrets:
-  postgres_password:
-    external: true
-    name: ${STACK_NAME}_postgres_password_${SECRET_POSTGRES_PASSWORD_VERSION:-v1}
   secret_key_base:
     external: true
     name: ${STACK_NAME}_secret_key_base_${SECRET_SECRET_KEY_BASE_VERSION:-v1}

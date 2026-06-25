@@ -18,17 +18,19 @@ services:
       - PUBLIC_PORT=443
       - MIX_ENV=prod
       
-      - HOSTNAME
+      - HOSTNAME=${DOMAIN}
       - INSTANCE_DESCRIPTION
       - DISABLE_DB_AUTOMIGRATION
       - UPLOAD_LIMIT
       - INVITE_KEY
-      - LANG
-      - SEEDS_USER
-      - ERLANG_COOKIE
-      - REPLACE_OS_VARS
-      - LIVEVIEW_ENABLED
-      - APP_NAME
+      - LANG=${LANG:-en_US.UTF-8}
+      - SEEDS_USER=${SEEDS_USER:-root}
+      - ERLANG_COOKIE=${ERLANG_COOKIE:-bonfire_cookie}
+      - REPLACE_OS_VARS=${REPLACE_OS_VARS:-true}
+      - LIVEVIEW_ENABLED=${LIVEVIEW_ENABLED:-true}
+      - ACME_AGREE=${ACME_AGREE:-true}
+      - SHOW_DEBUG_IN_DEV=${SHOW_DEBUG_IN_DEV:-true}
+      - APP_NAME={APP_NAME:-Bonfire}
       - PLUG_SERVER
       - WITH_LV_NATIVE
       - WITH_IMAGE_VIX

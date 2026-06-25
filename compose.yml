@@ -28,8 +28,6 @@ services:
       - ERLANG_COOKIE=${ERLANG_COOKIE:-bonfire_cookie}
       - REPLACE_OS_VARS=${REPLACE_OS_VARS:-true}
       - LIVEVIEW_ENABLED=${LIVEVIEW_ENABLED:-true}
-      - ACME_AGREE=${ACME_AGREE:-true}
-      - SHOW_DEBUG_IN_DEV=${SHOW_DEBUG_IN_DEV:-true}
       - APP_NAME={APP_NAME:-Bonfire}
       - PLUG_SERVER
       - WITH_LV_NATIVE

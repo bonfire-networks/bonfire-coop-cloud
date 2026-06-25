@@ -146,12 +146,12 @@ services:
         #- "traefik.http.routers.${STACK_NAME}.middlewares=${STACK_NAME}-redirect"
         #- "traefik.http.middlewares.${STACK_NAME}-redirect.headers.SSLForceHost=true"
         #- "traefik.http.middlewares.${STACK_NAME}-redirect.headers.SSLHost=${DOMAIN}"
-    # healthcheck:
-    #   test: ["CMD", "curl", "-f", "http://localhost"]
-    #   interval: 30s
-    #   timeout: 10s
-    #   retries: 10
-    #   start_period: 1m
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 15s
 
 volumes:
   db-data:

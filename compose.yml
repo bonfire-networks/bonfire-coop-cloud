@@ -3,7 +3,7 @@ version: "3.8"
 
 services:
   app:
-    image: ${APP_DOCKER_IMAGE}
+    image: bonfirenetworks/bonfire:${APP_VERSION:-1.0.4}-${APP_FLAVOUR:-social}-${APP_PLATFORM:-amd64}
     logging:
       driver: "json-file"
       options:
@@ -36,7 +36,7 @@ services:
       - DB_STATEMENT_TIMEOUT
       - DB_MIGRATE_INDEXES_CONCURRENTLY
 
-      - MAIL_BACKEND
+      - MAIL_BACKEND=${MAIL_BACKEND:-none}
       - MAIL_DOMAIN
       - MAIL_FROM
       - MAIL_KEY

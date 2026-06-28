@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  app:
+    environment:
+      - BASIC_AUTH
+    secrets:
+      - usersfile
+    deploy:
+      labels:
+        - "traefik.http.middlewares.${STACK_NAME}_basicauth.basicauth.usersFile=/run/secrets/usersfile"
+        - "traefik.http.routers.${STACK_NAME}.middlewares=${STACK_NAME}_basicauth"
+
+secrets:
+  usersfile:
+    name: ${STACK_NAME}_usersfile_${SECRET_USERSFILE_VERSION}
+    external: true

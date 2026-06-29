@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  app:
+    environment:
+      - GHOST_URL
+      - GHOST_CONTENT_API_KEY_FILE=/run/secrets/ghost_content_api_key
+      - GHOST_ADMIN_API_KEY_FILE=/run/secrets/ghost_admin_api_key
+      - IFRAME_ALLOWED_ORIGINS
+    secrets:
+      - ghost_content_api_key
+      - ghost_admin_api_key
+
+secrets:
+  ghost_content_api_key:
+    external: true
+    name: ${STACK_NAME}_ghost_content_api_key_${SECRET_GHOST_CONTENT_API_KEY_VERSION:-v1}
+  ghost_admin_api_key:
+    external: true
+    name: ${STACK_NAME}_ghost_admin_api_key_${SECRET_GHOST_ADMIN_API_KEY_VERSION:-v1}

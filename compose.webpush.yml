@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  app:
+    environment:
+      - WEB_PUSH_SUBJECT
+      - WEB_PUSH_PUBLIC_KEY
+      - WEB_PUSH_PRIVATE_KEY_FILE=/run/secrets/webpush_private_key
+    secrets:
+      - webpush_private_key
+
+secrets:
+  webpush_private_key:
+    external: true
+    name: ${STACK_NAME}_webpush_private_key_${SECRET_WEBPUSH_PRIVATE_KEY_VERSION:-v1}

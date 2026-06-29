@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  app:
+    environment:
+      - OPENID_1_DISPLAY_NAME
+      - OPENID_1_DISCOVERY
+      - OPENID_1_CLIENT_ID
+      - OPENID_1_CLIENT_SECRET_FILE=/run/secrets/openid_client_secret
+      - OPENID_1_SCOPE
+      - OPENID_1_RESPONSE_TYPE
+      - OPENID_1_ENABLE_SIGNUP
+    secrets:
+      - openid_client_secret
+
+secrets:
+  openid_client_secret:
+    external: true
+    name: ${STACK_NAME}_openid_client_secret_${SECRET_OPENID_CLIENT_SECRET_VERSION:-v1}

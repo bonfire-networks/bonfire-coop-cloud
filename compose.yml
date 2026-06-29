@@ -42,10 +42,6 @@ services:
       - OTEL_HONEYCOMB_API_KEY
       - OTEL_LIGHTSTEP_API_KEY
       
-      - WEB_PUSH_SUBJECT
-      - WEB_PUSH_PUBLIC_KEY
-      - WEB_PUSH_PRIVATE_KEY
-      
       - AKISMET_API_KEY
       - MAPBOX_API_KEY
       - GEOLOCATE_OPENCAGEDATA
@@ -53,33 +49,6 @@ services:
       
       - ENABLE_SSO_PROVIDER
       - OAUTH_ISSUER
-      
-      - OPENID_1_DISPLAY_NAME
-      - OPENID_1_DISCOVERY
-      - OPENID_1_CLIENT_ID
-      - OPENID_1_CLIENT_SECRET
-      - OPENID_1_SCOPE
-      - OPENID_1_RESPONSE_TYPE
-      - OPENID_1_ENABLE_SIGNUP
-      
-      - OAUTH_1_DISPLAY_NAME
-      - OAUTH_1_CLIENT_ID
-      - OAUTH_1_CLIENT_SECRET
-      - OAUTH_1_AUTHORIZE_URI
-      - OAUTH_1_ACCESS_TOKEN_URI
-      - OAUTH_1_USER_INFO_URI
-      - OAUTH_1_ENABLE_SIGNUP
-
-      - GITHUB_APP_CLIENT_ID
-      - GITHUB_CLIENT_SECRET
-
-      - ORCID_CLIENT_ID
-      - ORCID_CLIENT_SECRET
-
-      - GHOST_URL
-      - GHOST_CONTENT_API_KEY
-      - GHOST_ADMIN_API_KEY
-      - IFRAME_ALLOWED_ORIGINS
 
       - SECRET_KEY_BASE_FILE=/run/secrets/secret_key_base
       - SIGNING_SALT_FILE=/run/secrets/signing_salt

@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  app:
+    environment:
+      - OAUTH_1_DISPLAY_NAME
+      - OAUTH_1_CLIENT_ID
+      - OAUTH_1_CLIENT_SECRET_FILE=/run/secrets/oauth_client_secret
+      - OAUTH_1_AUTHORIZE_URI
+      - OAUTH_1_ACCESS_TOKEN_URI
+      - OAUTH_1_USER_INFO_URI
+      - OAUTH_1_ENABLE_SIGNUP
+    secrets:
+      - oauth_client_secret
+
+secrets:
+  oauth_client_secret:
+    external: true
+    name: ${STACK_NAME}_oauth_client_secret_${SECRET_OAUTH_CLIENT_SECRET_VERSION:-v1}

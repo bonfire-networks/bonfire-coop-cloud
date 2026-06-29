@@ -36,24 +36,6 @@ services:
       - DB_STATEMENT_TIMEOUT
       - DB_MIGRATE_INDEXES_CONCURRENTLY
 
-      - MAIL_BACKEND=${MAIL_BACKEND:-none}
-      - MAIL_DOMAIN
-      - MAIL_FROM
-      - MAIL_KEY
-      - MAIL_PROJECT_ID
-      - MAIL_PRIVATE_KEY
-      - MAIL_BASE_URI
-      - MAIL_REGION
-      - MAIL_SERVER
-      - MAIL_USER
-      - MAIL_PASSWORD
-      - MAIL_PORT
-      - MAIL_TLS
-      - MAIL_SSL
-      - MAIL_SMTP_AUTH
-      - MAIL_RETRIES
-      - MAIL_ARGS
-
       - SENTRY_DSN
       - OTEL_ENABLED
       - OTEL_SERVICE_NAME
@@ -115,12 +97,10 @@ services:
       - secret_key_base
       - signing_salt
       - encryption_salt
-      - meili_master_key
       - seeds_pw
       - livebook_password
     volumes:
       - upload-data:/opt/app/data/uploads
-      # - backup-data:/opt/app/data/backup
     networks:
       - proxy
       - internal
@@ -134,18 +114,11 @@ services:
         condition: on-failure
       labels:
         - "backupbot.backup=${ENABLE_BACKUPS:-true}"
-        #- backupbot.backup.volumes.upload-data: "true"
-        #- backupbot.backup.volumes.upload-data.path: "/opt/app/data/uploads"
         - "traefik.enable=true"
         - "traefik.http.services.${STACK_NAME}.loadbalancer.server.port=4000"
         - "traefik.http.routers.${STACK_NAME}.rule=Host(`${DOMAIN}`${EXTRA_DOMAINS})"
         - "traefik.http.routers.${STACK_NAME}.entrypoints=web-secure"
         - "traefik.http.routers.${STACK_NAME}.tls.certresolver=${LETS_ENCRYPT_ENV}"
-        #- "traefik.http.routers.${STACK_NAME}.middlewares=error-pages-middleware"
-        #- "traefik.http.services.${STACK_NAME}.loadbalancer.server.port=80"
-        #- "traefik.http.routers.${STACK_NAME}.middlewares=${STACK_NAME}-redirect"
-        #- "traefik.http.middlewares.${STACK_NAME}-redirect.headers.SSLForceHost=true"
-        #- "traefik.http.middlewares.${STACK_NAME}-redirect.headers.SSLHost=${DOMAIN}"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:4000"]
       interval: 30s
@@ -154,9 +127,7 @@ services:
       start_period: 15s
 
 volumes:
-  db-data:
   upload-data:
-  # backup-data:
 
 networks:
   proxy:
@@ -179,9 +150,6 @@ secrets:
   encryption_salt:
     external: true
     name: ${STACK_NAME}_encryption_salt_${SECRET_ENCRYPTION_SALT_VERSION:-v1}
-  meili_master_key:
-    external: true
-    name: ${STACK_NAME}_meili_master_key_${SECRET_MEILI_MASTER_KEY_VERSION:-v1}
   seeds_pw:
     external: true
     name: ${STACK_NAME}_seeds_pw_${SECRET_SEEDS_PW_VERSION:-v1}

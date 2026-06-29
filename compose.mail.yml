@@ -8,7 +8,6 @@ services:
       - MAIL_FROM
       - MAIL_KEY_FILE=/run/secrets/mail_key
       - MAIL_PROJECT_ID
-      - MAIL_PRIVATE_KEY
       - MAIL_BASE_URI
       - MAIL_REGION
       - MAIL_SERVER

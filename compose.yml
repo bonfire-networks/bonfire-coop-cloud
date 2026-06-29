@@ -80,7 +80,13 @@ services:
       - GHOST_CONTENT_API_KEY
       - GHOST_ADMIN_API_KEY
       - IFRAME_ALLOWED_ORIGINS
-      
+
+      - SECRET_KEY_BASE_FILE=/run/secrets/secret_key_base
+      - SIGNING_SALT_FILE=/run/secrets/signing_salt
+      - ENCRYPTION_SALT_FILE=/run/secrets/encryption_salt
+      - SEEDS_PW_FILE=/run/secrets/seeds_pw
+      - LIVEBOOK_PASSWORD_FILE=/run/secrets/livebook_password
+
     secrets:
       - secret_key_base
       - signing_salt

@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  app:
+    environment:
+      - MAIL_PRIVATE_KEY_FILE=/run/secrets/mail_private_key
+    secrets:
+      - mail_private_key
+
+secrets:
+  mail_private_key:
+    external: true
+    name: ${STACK_NAME}_mail_private_key_${SECRET_MAIL_PRIVATE_KEY_VERSION:-v1}

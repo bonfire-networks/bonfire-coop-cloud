@@ -37,7 +37,10 @@ services:
       
       - DB_SLOW_QUERY_MS
       - DB_STATEMENT_TIMEOUT
+      - DB_QUERY_TIMEOUT
+      - DB_JIT
       - DB_MIGRATE_INDEXES_CONCURRENTLY
+      - PROD_LOG_LEVEL
 
       - MAIL_BACKEND
       - MAIL_DOMAIN
@@ -159,6 +162,8 @@ services:
 
   db:
     image: ${DB_DOCKER_IMAGE}
+    # give Postgres time to shut down cleanly: the Swarm default (10s) force-kills it mid-shutdown on every redeploy, which wipes the cumulative stats (pg_stat_*) that autovacuum's triggers depend on — a root cause of autovacuum never running on big tables
+    stop_grace_period: ${DB_STOP_GRACE_PERIOD:-2m}
     environment:
       # - POSTGRES_PASSWORD
       - POSTGRES_USER=postgres

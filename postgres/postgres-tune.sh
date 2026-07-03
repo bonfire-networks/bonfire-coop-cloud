@@ -35,14 +35,21 @@ detect_total_memory_kb() {
         echo $((AVAILABLE_RAM_GB * GB / KB))
     elif [[ -n "${AVAILABLE_RAM_MB:-}" ]]; then
         echo $((AVAILABLE_RAM_MB * MB / KB))
+    elif [[ -r /sys/fs/cgroup/memory.max && "$(cat /sys/fs/cgroup/memory.max)" != "max" ]]; then
+        # cgroup v2: an explicit container memory limit is the deliberate budget signal
+        echo $(($(cat /sys/fs/cgroup/memory.max) / KB))
+    elif [[ -r /sys/fs/cgroup/memory/memory.limit_in_bytes ]] &&
+         [[ "$(cat /sys/fs/cgroup/memory/memory.limit_in_bytes)" -lt $((1 << 60)) ]]; then
+        # cgroup v1 (its "no limit" sentinel is a huge number rather than "max")
+        echo $(($(cat /sys/fs/cgroup/memory/memory.limit_in_bytes) / KB))
     elif [[ -f /proc/meminfo ]]; then
-        # Linux
-        awk '/MemTotal/ {print int($2)}' /proc/meminfo
+        # Calculate based on total available memory: claiming a fraction as co-hosted services need the rest. Sized for our standard stack (app + postgres + search + proxy). Override with PG_RAM_PERCENT or AVAILABLE_RAM_MB.
+        awk -v pct="${PG_RAM_PERCENT:-40}" '/MemTotal/ {print int($2 * pct / 100)}' /proc/meminfo
     elif command -v sysctl &> /dev/null; then
         # macOS/BSD
         local mem_bytes
         mem_bytes=$(sysctl -n hw.memsize 2>/dev/null || sysctl -n hw.physmem 2>/dev/null)
-        echo $((mem_bytes / KB))
+        echo $((mem_bytes * ${PG_RAM_PERCENT:-40} / 100 / KB))
     else
         # Fallback: assume 4GB
         echo $((4 * GB / KB))

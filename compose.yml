@@ -24,7 +24,7 @@ services:
       - SEEDS_USER=${SEEDS_USER:-root}
       - REPLACE_OS_VARS=${REPLACE_OS_VARS:-true}
       - LIVEVIEW_ENABLED=${LIVEVIEW_ENABLED:-true}
-      - APP_NAME={APP_NAME:-Bonfire}
+      - APP_NAME=${APP_NAME:-Bonfire}
       - PLUG_SERVER
       - WITH_LV_NATIVE=${WITH_LV_NATIVE:-0}
       - WITH_IMAGE_VIX=${WITH_IMAGE_VIX:-1}

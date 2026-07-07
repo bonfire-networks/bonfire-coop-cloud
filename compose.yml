@@ -3,7 +3,7 @@ version: "3.8"
 
 services:
   app:
-    image: bonfirenetworks/bonfire:${APP_VERSION:-1.0.4}-${APP_FLAVOUR:-social}-${APP_PLATFORM:-amd64}
+    image: ${CONTAINER_REGISTRY:-bonfirenetworks/bonfire}:${APP_VERSION:-1.0.4}-${APP_FLAVOUR:-social}-${APP_PLATFORM:-amd64}
     logging:
       driver: "json-file"
       options:
@@ -22,7 +22,6 @@ services:
       - INVITE_KEY
       - LANG=${LANG:-en_US.UTF-8}
       - SEEDS_USER=${SEEDS_USER:-root}
-      - ERLANG_COOKIE=${ERLANG_COOKIE:-bonfire_cookie}
       - REPLACE_OS_VARS=${REPLACE_OS_VARS:-true}
       - LIVEVIEW_ENABLED=${LIVEVIEW_ENABLED:-true}
       - APP_NAME={APP_NAME:-Bonfire}
@@ -31,21 +30,18 @@ services:
       - WITH_IMAGE_VIX=${WITH_IMAGE_VIX:-1}
       - WITH_AI=${WITH_AI:-0}
       - LIVE_DASHBOARD_LOGGER=${LIVE_DASHBOARD_LOGGER:-false}
+      - IFRAME_ALLOWED_ORIGINS
+      - RELEASE_DISTRIBUTION
+      - RELEASE_NODE
+      - RELEASE_MODE
       
       - DB_SLOW_QUERY_MS
       - DB_STATEMENT_TIMEOUT
       - DB_MIGRATE_INDEXES_CONCURRENTLY
 
       - SENTRY_DSN
-      - OTEL_ENABLED
-      - OTEL_SERVICE_NAME
-      - OTEL_HONEYCOMB_API_KEY
-      - OTEL_LIGHTSTEP_API_KEY
-      
-      - AKISMET_API_KEY
-      - MAPBOX_API_KEY
+
       - GEOLOCATE_OPENCAGEDATA
-      - GITHUB_TOKEN
       
       - ENABLE_SSO_PROVIDER
       - OAUTH_ISSUER
@@ -55,6 +51,7 @@ services:
       - ENCRYPTION_SALT_FILE=/run/secrets/encryption_salt
       - SEEDS_PW_FILE=/run/secrets/seeds_pw
       - LIVEBOOK_PASSWORD_FILE=/run/secrets/livebook_password
+      - RELEASE_COOKIE_FILE=/run/secrets/release_cookie
 
     secrets:
       - secret_key_base
@@ -62,6 +59,7 @@ services:
       - encryption_salt
       - seeds_pw
       - livebook_password
+      - release_cookie
     volumes:
       - upload-data:/opt/app/data/uploads
     networks:
@@ -119,3 +117,6 @@ secrets:
   livebook_password:
     external: true
     name: ${STACK_NAME}_livebook_password_${SECRET_LIVEBOOK_PASSWORD_VERSION:-v1}
+  release_cookie:
+    external: true
+    name: ${STACK_NAME}_release_cookie_${SECRET_RELEASE_COOKIE_VERSION:-v1}

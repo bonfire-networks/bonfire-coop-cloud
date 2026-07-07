@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  app:
+    environment:
+      - GITHUB_TOKEN_FILE=/run/secrets/github_token
+
+    secrets:
+      - github_token
+
+secrets:
+  github_token:
+    external: true
+    name: ${STACK_NAME}_github_token_${SECRET_GITHUB_TOKEN_VERSION:-v1} 

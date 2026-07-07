@@ -13,13 +13,11 @@ services:
       - UPLOADS_S3_DEFAULT_URL
       - UPLOADS_S3_URL_EXPIRATION_TTL
       - AWS_ROLE_ARN
-      - AWS_WEB_IDENTITY_TOKEN_FILE=/run/secrets/aws_web_identity_token
 
     secrets:
       - mail_key
       - uploads_s3_access_key_id
       - uploads_s3_secret_access_key
-      - aws_web_identity_token
 
 secrets:
   mail_key:
@@ -31,6 +29,3 @@ secrets:
   uploads_s3_secret_access_key:
     external: true
     name: ${STACK_NAME}_uploads_s3_secret_access_key_${SECRET_UPLOADS_S3_SECRET_ACCESS_KEY_VERSION:-v1}
-  aws_web_identity_token:
-    external: true
-    name: ${STACK_NAME}_aws_web_identity_token_${SECRET_AWS_WEB_IDENTITY_TOKEN_VERSION:-v1}

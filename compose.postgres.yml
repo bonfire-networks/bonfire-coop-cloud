@@ -17,8 +17,8 @@ services:
     image: ${DB_DOCKER_IMAGE:-ghcr.io/baosystems/postgis}:${DB_DOCKER_VERSION:-17-3.5}
     command: >
       postgres
-      -c max_connections=200
-      -c shared_buffers=${DB_MEMORY_LIMIT}MB
+      -c max_connections=${DB_MAX_CONNECTIONS:-200}
+      -c shared_buffers=${DB_MEMORY_LIMIT:-1024}MB
     # -c shared_preload_libraries='pg_stat_statements'
     # -c statement_timeout=1800000
     # -c pg_stat_statements.track=all
@@ -31,7 +31,7 @@ services:
            size: 1000000000
            # about 1 GB in bytes 
     tmpfs:
-      - /tmp:size=${DB_MEMORY_LIMIT}M^
+      - /tmp:size=${DB_MEMORY_LIMIT:-1024}M^
     networks:
       - internal
     environment:

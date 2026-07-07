@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  app:
+    environment:
+      - OTEL_ENABLED
+      - OTEL_SERVICE_NAME
+      - OTEL_HONEYCOMB_API_KEY_FILE=/run/secrets/honeycomb_api_key
+      - OTEL_LIGHTSTEP_API_KEY_FILE=/run/secrets/lightstep_api_key
+
+    secrets:
+      - honeycomb_api_key
+      - lightstep_api_key
+
+secrets:
+  honeycomb_api_key:
+    external: true
+    name: ${STACK_NAME}_honeycomb_api_key_${SECRET_HONEYCOMB_API_KEY_VERSION:-v1}
+  lightstep_api_key:
+    external: true
+    name: ${STACK_NAME}_lightstep_api_key_${SECRET_LIGHTSTEP_API_KEY_VERSION:-v1}

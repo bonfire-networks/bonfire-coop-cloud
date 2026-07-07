@@ -15,13 +15,38 @@ services:
 
   db:
     image: ${DB_DOCKER_IMAGE:-ghcr.io/baosystems/postgis}:${DB_DOCKER_VERSION:-17-3.5}
+    # give Postgres time to shut down cleanly: the Swarm default (10s) force-kills it mid-shutdown on every redeploy, which wipes the cumulative stats (pg_stat_*) that autovacuum's triggers depend on — a root cause of autovacuum never running on big tables
+    stop_grace_period: 2m  # NOTE: abra validates the schema before env interpolation, so this duration field can't be env-parameterized
+    # static tuning defaults for deployments NOT using the postgres tuner overlay (NOTE: `compose.postgres.tune.yml` computes these from your system resources instead of hardcoding them, so please use it!) 
+    # Notes:
+    # memory defaults are deliberately SAFE-SMALL (fit a 1 or 2GB VPS with the app co-hosted): shared_buffers is allocated at boot and maintenance_work_mem is per vacuum worker, so oversizing can prevent startup or OOM small machines — the tuner overlay right-sizes them instead (~25% / ~6% of the DB's RAM budget);
+    # max_connections is deliberately low because Bonfire's Ecto pool is the connection pooler (~25-50 conns; oversizing shrinks usable work_mem);
+    # jit off = measured per-query compile tax on Bonfire's many-join queries with no benefit; 
+    # the autovacuum settings suit Bonfire's soft-delete/append workload where default thresholds never trigger on big tables.
     command: >
       postgres
-      -c max_connections=${DB_MAX_CONNECTIONS:-200}
-      -c shared_buffers=${DB_MEMORY_LIMIT:-1024}MB
-    # -c shared_preload_libraries='pg_stat_statements'
+      -c max_connections=${PG_MAX_CONNECTIONS:-100}
+      -c shared_buffers=${PG_SHARED_BUFFERS_MB:-256}MB
+      -c effective_cache_size=${PG_EFFECTIVE_CACHE_SIZE_MB:-768}MB
+      -c work_mem=${PG_WORK_MEM_MB:-16}MB
+      -c maintenance_work_mem=${PG_MAINTENANCE_WORK_MEM_MB:-128}MB
+      -c random_page_cost=${PG_RANDOM_PAGE_COST:-1.1}
+      -c effective_io_concurrency=${PG_EFFECTIVE_IO_CONCURRENCY:-200}
+      -c jit=${PG_JIT:-off}
+      -c wal_compression=${PG_WAL_COMPRESSION:-lz4}
+      -c default_toast_compression=${PG_TOAST_COMPRESSION:-lz4}
+      -c shared_preload_libraries=${PG_PRELOAD_LIBS:-pg_stat_statements}
+      -c pg_stat_statements.track=all
+      -c track_io_timing=on
+      -c track_activity_query_size=16384
+      -c autovacuum_vacuum_scale_factor=0.05
+      -c autovacuum_vacuum_insert_scale_factor=0.05
+      -c autovacuum_vacuum_cost_limit=1000
+      -c log_autovacuum_min_duration=0
+      -c log_min_duration_statement=${PG_LOG_MIN_DURATION_STATEMENT:-2000}
+      -c log_lock_waits=on
+      -c log_temp_files=0
     # -c statement_timeout=1800000
-    # -c pg_stat_statements.track=all
     #entrypoint: ['tail', '-f', '/dev/null'] # uncomment when the Postgres DB is corrupted and won't start
     volumes:
       - db-data:/var/lib/postgresql/data

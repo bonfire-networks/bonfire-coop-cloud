@@ -37,7 +37,10 @@ services:
       
       - DB_SLOW_QUERY_MS
       - DB_STATEMENT_TIMEOUT
+      - DB_QUERY_TIMEOUT
+      - DB_JIT
       - DB_MIGRATE_INDEXES_CONCURRENTLY
+      - PROD_LOG_LEVEL
 
       - SENTRY_DSN
 
@@ -74,6 +77,9 @@ services:
       restart_policy:
         condition: on-failure
       labels:
+        # how long abra waits for the deploy to converge, as needs headroom for DB migrations on upgrades
+        # and the db service's 2m stop_grace_period during redeploys
+        - "coop-cloud.${STACK_NAME}.timeout=${TIMEOUT:-300}"
         - "backupbot.backup=${ENABLE_BACKUPS:-true}"
         - "traefik.enable=true"
         - "traefik.http.services.${STACK_NAME}.loadbalancer.server.port=4000"

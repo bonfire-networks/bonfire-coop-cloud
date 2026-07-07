@@ -15,6 +15,8 @@ services:
       #     # -c shared_preload_libraries='pg_stat_statements'
       #     # -c statement_timeout=1800000
       #     # -c pg_stat_statements.track=all
+    # give Postgres time to shut down cleanly: the Swarm default (10s) force-kills it mid-shutdown on every redeploy, which wipes the cumulative stats (pg_stat_*) that autovacuum's triggers depend on — a root cause of autovacuum never running on big tables
+    stop_grace_period: 2m  # NOTE: abra validates the schema before env interpolation, so this duration field can't be env-parameterized
     # shm_size: ${DB_MEMORY_LIMIT} # unsupported by docker swarm
     tmpfs:
       - /tmp:size=${DB_MEMORY_LIMIT}M
@@ -40,10 +42,10 @@ configs:
     name: ${STACK_NAME}_postgres_entrypoint_${POSTGRES_ENTRYPOINT_VERSION:-v6}
     file: postgres/postgres-entrypoint.sh
   postgres_tune:
-    name: ${STACK_NAME}_postgres_tune_${POSTGRES_TUNE_VERSION:-v1}
+    name: ${STACK_NAME}_postgres_tune_${POSTGRES_TUNE_VERSION:-v2}
     file: postgres/postgres-tune.sh
   postgres_conf_tmpl:
-    name: ${STACK_NAME}_postgres_conf_tmpl_${POSTGRES_CONF_TMPL_VERSION:-v2}
+    name: ${STACK_NAME}_postgres_conf_tmpl_${POSTGRES_CONF_TMPL_VERSION:-v3}
     file: postgres/postgres.conf.tmpl
   bash_envsubst:
     name: ${STACK_NAME}_bash_envsubst_${BASH_ENVSUBST_VERSION:-v1}

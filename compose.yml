@@ -3,7 +3,7 @@ version: "3.8"
 
 services:
   app:
-    image: ${CONTAINER_REGISTRY:-bonfirenetworks/bonfire}:${APP_VERSION:-1.0.4}-${APP_FLAVOUR:-social}-${APP_PLATFORM:-amd64}
+    image: ${CONTAINER_REGISTRY:-bonfirenetworks/bonfire}:${APP_VERSION:-1.0.5}-${APP_FLAVOUR:-social}-${APP_PLATFORM:-amd64}
     logging:
       driver: "json-file"
       options:

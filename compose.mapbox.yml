@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  app:
+    environment:
+      - MAPBOX_API_KEY_FILE=/run/secrets/mapbox_api_key
+
+    secrets:
+      - mapbox_api_key
+
+secrets:
+  mapbox_api_key:
+    external: true
+    name: ${STACK_NAME}_mapbox_api_key_${SECRET_MAPBOX_API_KEY_VERSION:-v1} 

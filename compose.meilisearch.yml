@@ -7,6 +7,8 @@ services:
       - search
     environment:
       - SEARCH_MEILI_INSTANCE=http://${STACK_NAME}_search:7700
+    secrets:
+      - meili_master_key
       
   search:
     image: getmeili/meilisearch:v1.14 # WIP: upgrade from v1.11 to 1.14
@@ -42,3 +44,8 @@ configs:
   meili_backup:
     name: ${STACK_NAME}_meili_backup_${MEILI_BACKUP_VERSION:-v4}
     file: meili_backup.sh
+
+secrets:
+  meili_master_key:
+    external: true
+    name: ${STACK_NAME}_meili_master_key_${SECRET_MEILI_MASTER_KEY_VERSION:-v1}

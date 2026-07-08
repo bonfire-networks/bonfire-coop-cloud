@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  app:
+    environment:
+      - UPLOADS_S3_BUCKET
+      - UPLOADS_S3_ACCESS_KEY_ID_FILE=/run/secrets/uploads_s3_access_key_id
+      - UPLOADS_S3_SECRET_ACCESS_KEY_FILE=/run/secrets/uploads_s3_secret_access_key
+      - UPLOADS_S3_REGION
+      - UPLOADS_S3_HOST
+      - UPLOADS_S3_SCHEME
+      - UPLOADS_S3_URL
+      - UPLOADS_S3_DEFAULT_URL
+      - UPLOADS_S3_URL_EXPIRATION_TTL
+      - AWS_ROLE_ARN
+
+    secrets:
+      - mail_key
+      - uploads_s3_access_key_id
+      - uploads_s3_secret_access_key
+
+secrets:
+  mail_key:
+    external: true
+    name: ${STACK_NAME}_mail_key_${SECRET_MAIL_KEY_VERSION:-v1}
+  uploads_s3_access_key_id:
+    external: true
+    name: ${STACK_NAME}_uploads_s3_access_key_id_${SECRET_UPLOADS_S3_ACCESS_KEY_ID_VERSION:-v1}
+  uploads_s3_secret_access_key:
+    external: true
+    name: ${STACK_NAME}_uploads_s3_secret_access_key_${SECRET_UPLOADS_S3_SECRET_ACCESS_KEY_VERSION:-v1}

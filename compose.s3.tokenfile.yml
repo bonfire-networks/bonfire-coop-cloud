@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  app:
+    environment:
+      - AWS_WEB_IDENTITY_TOKEN_FILE=/run/secrets/aws_web_identity_token
+
+    secrets:
+      - aws_web_identity_token
+
+secrets:
+  aws_web_identity_token:
+    external: true
+    name: ${STACK_NAME}_aws_web_identity_token_${SECRET_AWS_WEB_IDENTITY_TOKEN_VERSION:-v1}

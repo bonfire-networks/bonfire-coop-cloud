@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  app:
+    environment:
+      - AKISMET_API_KEY_FILE=/run/secrets/akismet_api_key
+
+    secrets:
+      - akismet_api_key
+
+secrets:
+  akismet_api_key:
+    external: true
+    name: ${STACK_NAME}_akismet_api_key_${SECRET_AKISMET_API_KEY_VERSION:-v1} 

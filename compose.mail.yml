@@ -2,14 +2,26 @@ version: "3.8"
 
 services:
   app:
+    environment:
+      - MAIL_BACKEND=${MAIL_BACKEND:-none}
+      - MAIL_DOMAIN
+      - MAIL_FROM
+      - MAIL_KEY_FILE=/run/secrets/mail_key
+      - MAIL_PROJECT_ID
+      - MAIL_BASE_URI
+      - MAIL_REGION
+      - MAIL_SERVER
+      - MAIL_USER
+      - MAIL_PORT
+      - MAIL_TLS
+      - MAIL_SSL
+      - MAIL_SMTP_AUTH
+      - MAIL_RETRIES
+      - MAIL_ARGS
     secrets:
-      - mail_password
       - mail_key
 
 secrets:
-  mail_password:
-    external: true
-    name: ${STACK_NAME}_mail_password_${SECRET_MAIL_PASSWORD_VERSION:-v1}
   mail_key:
     external: true
     name: ${STACK_NAME}_mail_key_${SECRET_MAIL_KEY_VERSION:-v1}

@@ -86,6 +86,7 @@ services:
         - "traefik.http.routers.${STACK_NAME}.rule=Host(`${DOMAIN}`${EXTRA_DOMAINS})"
         - "traefik.http.routers.${STACK_NAME}.entrypoints=web-secure"
         - "traefik.http.routers.${STACK_NAME}.tls.certresolver=${LETS_ENCRYPT_ENV}"
+        - "coop-cloud.${STACK_NAME}.version=1.0.0+1.0.5-social-amd64"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:4000"]
       interval: 30s

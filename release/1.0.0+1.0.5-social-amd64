@@ -1,0 +1,1 @@
+ATTENTION: this is the first release and contains a couple of breaking changes in comparison to the previously unreleased recipe. There are a lot of secrets, keys and passwords moved to docker secrets, and the .env.sample was completly restructured. It is recommended to start your env file from scratch from the new template to make sure nothing is missing.

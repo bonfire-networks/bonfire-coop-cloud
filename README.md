@@ -18,8 +18,8 @@ A [coop-cloud](https://coopcloud.tech) recipe for deploying [Bonfire](https://bo
 1. `abra app new bonfire --secrets`
 2. `abra app config <app-name>`
 3. `abra app deploy <app-name>`
-4. Open the elixi console: `abra app run <app-name> app bin/bonfire remote`
-5. Create admin account in Elixir console: `Bonfire.Me.make_account_only("my@email.net", "my pw")`
+4. Open the Elixir console: `abra app run <app-name> app bin/bonfire remote`
+5. Create admin account in Elixir console (the first account created this way will get admin rights): `Bonfire.Me.make_account_only("my@email.net", "my pw")`
 
 ## Use a custom Bonfire flavour
 

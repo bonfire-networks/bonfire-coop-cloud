@@ -49,6 +49,8 @@ services:
       - ENABLE_SSO_PROVIDER
       - OAUTH_ISSUER
 
+      - BONFIRE_CONSOLE_TOKEN
+
       - SECRET_KEY_BASE_FILE=/run/secrets/secret_key_base
       - SIGNING_SALT_FILE=/run/secrets/signing_salt
       - ENCRYPTION_SALT_FILE=/run/secrets/encryption_salt

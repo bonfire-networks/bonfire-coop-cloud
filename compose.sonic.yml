@@ -15,7 +15,7 @@ services:
     #   - sonic_password
       
   search:
-    image: valeriansaliou/sonic:v1.7.4
+    image: valeriansaliou/sonic:v1.8.1
     # secrets:
     #   - sonic_password
     volumes:

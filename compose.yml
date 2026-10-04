@@ -88,7 +88,14 @@ services:
         - "traefik.http.routers.${STACK_NAME}.rule=Host(`${DOMAIN}`${EXTRA_DOMAINS})"
         - "traefik.http.routers.${STACK_NAME}.entrypoints=web-secure"
         - "traefik.http.routers.${STACK_NAME}.tls.certresolver=${LETS_ENCRYPT_ENV}"
-        - "coop-cloud.${STACK_NAME}.version=2.0.2+1.0.7-social-amd64"
+        # uploads (e.g. SVG) are served from the instance's origin, so stop any script in them from running if opened directly
+        - "traefik.http.middlewares.${STACK_NAME}_uploads_csp.headers.customresponseheaders.Content-Security-Policy=sandbox; default-src 'none'; style-src 'unsafe-inline'"
+        - "traefik.http.routers.${STACK_NAME}_uploads.rule=Host(`${DOMAIN}`${EXTRA_DOMAINS}) && PathPrefix(`/data/uploads/`)"
+        - "traefik.http.routers.${STACK_NAME}_uploads.entrypoints=web-secure"
+        - "traefik.http.routers.${STACK_NAME}_uploads.tls.certresolver=${LETS_ENCRYPT_ENV}"
+        - "traefik.http.routers.${STACK_NAME}_uploads.service=${STACK_NAME}"
+        - "traefik.http.routers.${STACK_NAME}_uploads.middlewares=${STACK_NAME}_uploads_csp"
+        - "coop-cloud.${STACK_NAME}.version=2.0.3+1.0.7-social-amd64"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:4000"]
       interval: 30s

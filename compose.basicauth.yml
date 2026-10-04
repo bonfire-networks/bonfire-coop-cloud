@@ -7,6 +7,8 @@ services:
       labels:
         - "traefik.http.middlewares.${STACK_NAME}_basicauth.basicauth.usersFile=/run/secrets/usersfile"
         - "traefik.http.routers.${STACK_NAME}.middlewares=${STACK_NAME}_basicauth"
+        # the uploads router (see compose.yml) needs the basic auth too, or uploads would bypass it
+        - "traefik.http.routers.${STACK_NAME}_uploads.middlewares=${STACK_NAME}_basicauth,${STACK_NAME}_uploads_csp"
 
 secrets:
   usersfile:

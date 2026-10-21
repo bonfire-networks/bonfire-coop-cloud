@@ -1,0 +1,53 @@
+---
+version: "3.8"
+
+# Opt-in nginx sidecar that serves uploads directly from the volume (bypassing Phoenix) and shows a maintenance page whenever the app has no running task (e.g. during redeploys and upgrades). NOTE: don't combine with `compose.basicauth.yml`, as uploads served from here would bypass the basic auth.
+
+services:
+  static:
+    image: nginx:1.29.0-alpine
+    networks:
+      - proxy
+    volumes:
+      # NOTE: the app and this service share the local volume, so they must run on the same node
+      - upload-data:/srv/data/uploads:ro
+    configs:
+      - source: static_nginx_conf
+        target: /etc/nginx/conf.d/default.conf
+        mode: 0444
+      - source: maintenance_html
+        target: /srv/maintenance/maintenance.html
+        mode: 0444
+    healthcheck:
+      # 127.0.0.1 rather than localhost, as nginx only listens on IPv4
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/maintenance.html"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 5s
+    deploy:
+      restart_policy:
+        condition: on-failure
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.services.${STACK_NAME}_static.loadbalancer.server.port=80"
+        # serve uploads from here rather than through the app's `_uploads` router (which has the same rule, so this one needs an explicit higher priority)
+        - "traefik.http.routers.${STACK_NAME}_static_uploads.rule=Host(`${DOMAIN}`${EXTRA_DOMAINS}) && PathPrefix(`/data/uploads/`)"
+        - "traefik.http.routers.${STACK_NAME}_static_uploads.priority=10000"
+        - "traefik.http.routers.${STACK_NAME}_static_uploads.entrypoints=web-secure"
+        - "traefik.http.routers.${STACK_NAME}_static_uploads.tls.certresolver=${LETS_ENCRYPT_ENV}"
+        - "traefik.http.routers.${STACK_NAME}_static_uploads.service=${STACK_NAME}_static"
+        # lowest priority fallback: Traefik drops the app's routers while it has no running task, so requests land here and get the maintenance page
+        - "traefik.http.routers.${STACK_NAME}_maintenance.rule=Host(`${DOMAIN}`${EXTRA_DOMAINS})"
+        - "traefik.http.routers.${STACK_NAME}_maintenance.priority=1"
+        - "traefik.http.routers.${STACK_NAME}_maintenance.entrypoints=web-secure"
+        - "traefik.http.routers.${STACK_NAME}_maintenance.tls.certresolver=${LETS_ENCRYPT_ENV}"
+        - "traefik.http.routers.${STACK_NAME}_maintenance.service=${STACK_NAME}_static"
+
+configs:
+  static_nginx_conf:
+    name: ${STACK_NAME}_static_nginx_conf_${STATIC_NGINX_CONF_VERSION:-v1}
+    file: static.nginx.conf
+  maintenance_html:
+    name: ${STACK_NAME}_maintenance_html_${MAINTENANCE_HTML_VERSION:-v1}
+    file: maintenance.html

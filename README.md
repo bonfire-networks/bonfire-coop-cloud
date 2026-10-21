@@ -38,6 +38,10 @@ If you want to use bleeding edge releases try setting `APP_VERSION=latest-alpha`
 2. add `SONIC_PASSWORD=a-super-secret-password` to the same file (make sure to change the password after pasting!)
 3. redeploy with `abra app deploy --force <app-name>`
 
+## Serve uploads with nginx and show a maintenance page
+
+An optional nginx service serves uploaded files straight from the uploads volume, so they don't go through the app, and keep working while it restarts. It also shows a maintenance page whenever the app is down, such as during upgrades. Uncomment the `COMPOSE_FILE` line that contains `compose.static.yml` in the `.env` file for your bonfire instance to enable.
+
 ## Protect the instance with basic auth
 
 For e.g. a testing phase you can protect your Bonfire instance with basic auth:

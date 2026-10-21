@@ -71,6 +71,8 @@ services:
       - proxy
       - internal
     entrypoint: ["/docker-entrypoint.sh", "./bin/bonfire", "start"]
+    # give the app time to shut down cleanly: on SIGTERM Oban stops fetching jobs and waits up to its `shutdown_grace_period` (default 15s) for running ones to finish, then the endpoint drains LiveView sockets and waits up to Thousand Island's `shutdown_timeout` (default 15s) for HTTP requests. These run one after the other, but the Swarm default (10s) force-kills the app first on every redeploy. Keep this above their sum.
+    stop_grace_period: 42s
     configs:
       - source: app_entrypoint
         target: /docker-entrypoint.sh

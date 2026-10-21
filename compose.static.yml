@@ -5,7 +5,7 @@ version: "3.8"
 
 services:
   static:
-    image: nginx:1.29.0-alpine
+    image: nginx:1.31.8-alpine
     networks:
       - proxy
     volumes:

@@ -39,7 +39,7 @@ services:
 
 configs:
   postgres_entrypoint:
-    name: ${STACK_NAME}_postgres_entrypoint_${POSTGRES_ENTRYPOINT_VERSION:-v6}
+    name: ${STACK_NAME}_postgres_entrypoint_${POSTGRES_ENTRYPOINT_VERSION:-v7}
     file: postgres/postgres-entrypoint.sh
   postgres_tune:
     name: ${STACK_NAME}_postgres_tune_${POSTGRES_TUNE_VERSION:-v2}

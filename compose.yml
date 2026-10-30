@@ -58,6 +58,10 @@ services:
       - LIVEBOOK_PASSWORD_FILE=/run/secrets/livebook_password
       - RELEASE_COOKIE_FILE=/run/secrets/release_cookie
 
+      - PLAUSIBLE_PROXY_ENABLED
+      - PLAUSIBLE_PROXY_DOMAIN
+      - PLAUSIBLE_PROXY_SCRIPT_PATH
+
     secrets:
       - secret_key_base
       - signing_salt
